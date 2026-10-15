@@ -2,9 +2,16 @@
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#E9E3FF">
-<title>Menu Bimba</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Menu Luniss">
+<meta name="application-name" content="Menu Luniss">
+<meta name="theme-color" content="#E4DBFF">
+<title>Menu Luniss</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23E4DBFF'/%3E%3Cpath d='M256 160c-30-22-70-26-100 0-48 42-34 130 6 182 22 29 52 30 94 14 42 16 72 15 94-14 40-52 54-140 6-182-30-26-70-22-100 0z' fill='%23F27A7A'/%3E%3Cellipse cx='198' cy='250' rx='16' ry='34' transform='rotate(18 198 250)' fill='%23fff' opacity='.5'/%3E%3Cpath d='M256 160c0-30 6-52 20-74' stroke='%238A5A3C' stroke-width='14' stroke-linecap='round' fill='none'/%3E%3Cpath d='M280 112c10-38 48-58 86-52-4 40-42 66-86 52z' fill='%236CC38F'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23E4DBFF'/%3E%3Cpath d='M256 160c-30-22-70-26-100 0-48 42-34 130 6 182 22 29 52 30 94 14 42 16 72 15 94-14 40-52 54-140 6-182-30-26-70-22-100 0z' fill='%23F27A7A'/%3E%3Cellipse cx='198' cy='250' rx='16' ry='34' transform='rotate(18 198 250)' fill='%23fff' opacity='.5'/%3E%3Cpath d='M256 160c0-30 6-52 20-74' stroke='%238A5A3C' stroke-width='14' stroke-linecap='round' fill='none'/%3E%3Cpath d='M280 112c10-38 48-58 86-52-4 40-42 66-86 52z' fill='%236CC38F'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -13,21 +20,29 @@
 :root{
   --bg:#F8F6FF; --card:#fff; --ink:#3B3659; --soft:#7C7799; --line:#ECE8F7;
   --lilla:#B9A9EF; --lilla-d:#7A63D6; --menta:#C4EBDC; --pesca:#FFD6C4; --cielo:#CFE6FA; --giallo:#FFF0B8;
-  --ok:#5BBF94; --warn:#F0A04B; --bad:#E5645F;
+  --ok:#5BBF94; --warn:#F0A04B; --bad:#E5645F; --hh:130px;
   --ff-h:'Fredoka',system-ui,sans-serif; --ff-b:'Nunito',system-ui,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-padding-top:150px}
+html{scroll-padding-top:200px;-webkit-text-size-adjust:100%;touch-action:manipulation}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 var(--ff-b);padding-bottom:96px}
-button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button,label,input,select,a{touch-action:manipulation}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;-webkit-user-select:none;user-select:none}
 button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--lilla-d);outline-offset:2px}
 h1,h2,h3{font-family:var(--ff-h);font-weight:600;margin:0}
-header{padding:calc(env(safe-area-inset-top,0px) + 18px) 18px 14px;background:linear-gradient(160deg,#E4DBFF,#D5ECFB 60%,#D9F3E8)}
-header h1{font-size:28px;display:flex;align-items:center;gap:10px}
-header h1 i{color:var(--lilla-d);font-size:24px}
-header p{margin:2px 0 0;color:var(--soft);font-weight:600;font-size:14px}
+header{position:sticky;top:0;z-index:10;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 10px;background:linear-gradient(160deg,#E4DBFF,#D5ECFB 60%,#D9F3E8)}
+.top{display:flex;align-items:center;gap:10px}
+.top h1{flex:1;font-size:26px;display:flex;gap:10px;align-items:center}
+#logo{width:34px;height:34px;border-radius:10px}
+.pill{padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.65);font-weight:700;font-size:14px}
+.wk{display:flex;align-items:center;gap:8px;margin-top:8px}
+.wk>button{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.72);display:grid;place-items:center;font-size:16px}
+.wkc{flex:1;position:relative;text-align:center;background:rgba(255,255,255,.72);border-radius:14px;padding:5px 8px;line-height:1.2}
+.wkc b{display:block;font-size:15px}
+.wkc small{color:var(--soft);font-weight:600;font-size:12.5px}
+.wkc input{position:absolute;inset:0;opacity:0;width:100%;height:100%;font-size:16px}
 main{max-width:720px;margin:0 auto;padding:14px}
-.days{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;position:sticky;top:0;background:var(--bg);z-index:5;scrollbar-width:none}
+.days{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;position:sticky;top:var(--hh);background:var(--bg);z-index:5;scrollbar-width:none}
 .days::-webkit-scrollbar{display:none}
 .dchip{flex:0 0 auto;min-width:58px;padding:8px 6px;border-radius:18px;background:var(--card);border:2px solid var(--line);text-align:center;font-weight:700;line-height:1.15}
 .dchip small{display:block;color:var(--soft);font-weight:600}
@@ -40,7 +55,7 @@ h2.dtitle{font-size:22px;margin:4px 2px 10px}
 .card{background:var(--card);border-radius:22px;padding:14px;margin-bottom:12px;box-shadow:0 2px 14px rgba(122,99,214,.08)}
 .meal.done{background:#F2FBF6}
 .mh{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.mi{width:38px;height:38px;border-radius:14px;display:grid;place-items:center;font-size:17px}
+.mi{width:38px;height:38px;border-radius:14px;display:grid;place-items:center;font-size:17px;flex:0 0 auto}
 .mh h3{flex:1;font-size:19px}
 .mealchk{padding:6px 12px;border-radius:999px;background:var(--bg);border:2px solid var(--line);font-weight:700;font-size:14px;display:flex;gap:6px;align-items:center}
 .mealchk[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:#fff}
@@ -50,17 +65,16 @@ li.it{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px dashe
 .ck[aria-pressed=true]{background:var(--ok);border-color:var(--ok)}
 .nm{flex:1;text-align:left;font-weight:700;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:4px 0}
 li.it.eaten .nm .t{text-decoration:line-through;color:var(--soft)}
-.x{width:32px;height:32px;border-radius:50%;color:var(--soft)}
+.x{width:32px;height:32px;border-radius:50%;color:var(--soft);flex:0 0 auto}
 .x:hover{background:#FCE9E8;color:var(--bad)}
 .add{margin-top:6px;width:100%;padding:9px;border-radius:14px;background:var(--bg);color:var(--lilla-d);font-weight:700;border:2px dashed var(--lilla)}
 .chip{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--bg);color:var(--soft);white-space:nowrap}
 .chip.ok{background:#E2F6EC;color:#2F8F66}.chip.reach{background:#FFEBD2;color:#B96A12}.chip.over{background:#FDE0DF;color:#C0392B}
 .alert{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:16px;margin-bottom:10px;font-weight:600;font-size:14px}
 .alert.warn{background:#FFEBD2;color:#8F500B}.alert.bad{background:#FDE0DF;color:#9B2B22}.alert.info{background:var(--cielo);color:#245B84}
-.alert button{margin-left:auto;font-weight:700;text-decoration:underline;white-space:nowrap}
 .fh{display:flex;align-items:center;gap:10px}
 .fh .mi{width:42px;height:42px}
-.fh .fn{flex:1}
+.fh .fn{flex:1;min-width:0}
 .fn b{display:block;font-size:17px}
 .fn span{font-size:13px;color:var(--soft);font-weight:600}
 .cnt{font-family:var(--ff-h);font-size:22px}
@@ -72,8 +86,11 @@ li.it.eaten .nm .t{text-decoration:line-through;color:var(--soft)}
 .link{color:var(--lilla-d);font-weight:700;padding:4px 8px;border-radius:10px}
 .pri{background:var(--lilla-d);color:#fff;padding:11px 18px;border-radius:14px;font-weight:700}
 .ghost{background:var(--bg);padding:11px 18px;border-radius:14px;font-weight:700}
+.sec{background:var(--cielo);color:#245B84;padding:11px 18px;border-radius:14px;font-weight:700}
 .danger{background:#FDE0DF;color:#9B2B22;padding:11px 18px;border-radius:14px;font-weight:700}
 .wide{width:100%;margin-bottom:10px;display:flex;gap:8px;justify-content:center;align-items:center}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.two button{display:flex;gap:8px;justify-content:center;align-items:center;font-size:15px}
 .switch{display:flex;gap:10px;align-items:center;font-weight:600;font-size:14px}
 .switch input{width:22px;height:22px;accent-color:var(--lilla-d)}
 .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
@@ -88,6 +105,7 @@ li.it.eaten .nm .t{text-decoration:line-through;color:var(--soft)}
 .cats{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .empty{text-align:center;color:var(--soft);padding:18px 8px;font-weight:600}
 .empty i{display:block;font-size:30px;color:var(--lilla);margin-bottom:6px}
+.wrow{width:100%;text-align:left;display:block}
 nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);width:min(94vw,520px);display:flex;background:#fff;border-radius:26px;padding:6px;box-shadow:0 6px 28px rgba(80,60,160,.22);z-index:20}
 nav button{flex:1;padding:8px 2px;border-radius:20px;font-size:12px;font-weight:700;color:var(--soft);display:flex;flex-direction:column;gap:2px;align-items:center}
 nav button i{font-size:18px}
@@ -106,21 +124,29 @@ dialog input[type=text],dialog input[type=number],dialog select{display:block;wi
 </head>
 <body>
 <header>
-  <h1><i class="fa-solid fa-seedling"></i> Menu Bimba</h1>
-  <p id="range"></p>
+  <div class="top">
+    <h1><img id="logo" alt="" width="34" height="34"> Menu Luniss</h1>
+    <button class="pill" data-act="today"><i class="fa-solid fa-calendar-day"></i> Oggi</button>
+  </div>
+  <div class="wk">
+    <button data-act="prev" aria-label="Settimana precedente"><i class="fa-solid fa-chevron-left"></i></button>
+    <div class="wkc"><b id="range"></b><small id="rel"></small><input type="date" id="pick" aria-label="Scegli una data"></div>
+    <button data-act="next" aria-label="Settimana successiva"><i class="fa-solid fa-chevron-right"></i></button>
+  </div>
 </header>
 <main id="app"></main>
 <nav id="nav" aria-label="Sezioni">
   <button data-tab="menu"><i class="fa-solid fa-calendar-week"></i>Menu</button>
   <button data-tab="foods"><i class="fa-solid fa-gauge-high"></i>Limiti</button>
   <button data-tab="stats"><i class="fa-solid fa-chart-pie"></i>Statistiche</button>
-  <button data-tab="weeks"><i class="fa-solid fa-clock-rotate-left"></i>Settimane</button>
+  <button data-tab="more"><i class="fa-solid fa-gear"></i>Altro</button>
 </nav>
+<input type="file" id="file" accept="application/json,.json" hidden>
 <dialog id="dlg"></dialog>
 <div id="toast" role="status"></div>
 
 <script>
-const KEY='menuBimba.v1';
+const KEY='menuLuniss.v2', OLDKEY='menuBimba.v1';
 const DAYS=['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
 const SHORT=['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
 const MEALS=[
@@ -151,70 +177,109 @@ const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
 const monday=d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
 const fmt=d=>d.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
 const rangeOf=s=>{const a=parse(s);return fmt(a)+' – '+fmt(addDays(a,6))};
+const MKEY=/^[0-6]-(colazione|spuntino|pranzo|merenda|cena)$/;
 
+/* ---------- icona, PNG per Home e manifest ---------- */
+(function(){
+  const svg=document.querySelector('link[rel=icon]').href;
+  $('#logo').src=svg;
+  try{
+    const img=new Image();
+    img.onload=()=>{try{
+      const mk=s=>{const c=document.createElement('canvas');c.width=c.height=s;c.getContext('2d').drawImage(img,0,0,s,s);return c.toDataURL('image/png')};
+      document.querySelector('link[rel=apple-touch-icon]').href=mk(180);
+      const man={name:'Menu Luniss',short_name:'Luniss',start_url:location.href.split('#')[0],display:'standalone',background_color:'#F8F6FF',theme_color:'#E4DBFF',
+        icons:[{src:mk(192),sizes:'192x192',type:'image/png'},{src:mk(512),sizes:'512x512',type:'image/png'}]};
+      const l=document.createElement('link');l.rel='manifest';
+      l.href=URL.createObjectURL(new Blob([JSON.stringify(man)],{type:'application/manifest+json'}));
+      document.head.appendChild(l);
+    }catch(e){}};
+    img.src=svg;
+  }catch(e){}
+})();
+
+/* ---------- dati ---------- */
 function fresh(){
-  return{
-    foods:[
-      {id:uid(),name:'Tacchino',cat:'carne',max:4},
-      {id:uid(),name:'Pesce',cat:'pesce',max:3},
-      {id:uid(),name:'Legumi',cat:'legumi',max:3},
-      {id:uid(),name:'Uova',cat:'uova',max:2}
-    ],
-    week:{start:iso(monday(new Date())),meals:{}},
-    history:[],
-    onlyDone:false
-  };
+  return{foods:[
+    {id:uid(),name:'Tacchino',cat:'carne',max:4},
+    {id:uid(),name:'Pesce',cat:'pesce',max:3},
+    {id:uid(),name:'Legumi',cat:'legumi',max:3},
+    {id:uid(),name:'Uova',cat:'uova',max:2}
+  ],weeks:{},history:[],onlyDone:false};
+}
+function normalize(o){
+  if(!o||typeof o!=='object')throw new Error('formato');
+  let weeks=o.weeks;
+  if(!weeks&&o.week&&o.week.start)weeks={[o.week.start]:{meals:o.week.meals||{}}};
+  if(!weeks||typeof weeks!=='object'||!Array.isArray(o.foods))throw new Error('formato');
+  const foods=o.foods.filter(f=>f&&f.name).map(f=>({id:String(f.id||uid()),name:String(f.name).slice(0,60),cat:CATS[f.cat]?f.cat:'altro',max:Math.max(0,parseInt(f.max,10)||0)}));
+  const out={};
+  Object.keys(weeks).forEach(k=>{
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(k)||!weeks[k]||!weeks[k].meals)return;
+    const meals={};
+    Object.keys(weeks[k].meals).forEach(mk=>{
+      const m=weeks[k].meals[mk];
+      if(!MKEY.test(mk)||!m||!Array.isArray(m.items))return;
+      const items=m.items.filter(i=>i&&i.name).map(i=>({id:String(i.id||uid()),name:String(i.name).slice(0,60),cat:CATS[i.cat]?i.cat:'altro',done:!!i.done}));
+      meals[mk]={items,done:items.length>0&&!!m.done};
+    });
+    const mk=iso(monday(parse(k)));
+    out[mk]={meals:Object.assign(out[mk]?out[mk].meals:{},meals)};
+  });
+  const history=(Array.isArray(o.history)?o.history:[]).filter(h=>h&&h.start&&h.byCat&&/^\d{4}-\d{2}-\d{2}$/.test(h.start)).map(h=>{
+    const byCat={};Object.keys(h.byCat).forEach(k=>byCat[CATS[k]?k:'altro']=Number(h.byCat[k])||0);
+    return{id:String(h.id||uid()),start:h.start,total:Number(h.total)||0,meals:Number(h.meals)||0,byCat,over:Array.isArray(h.over)?h.over.map(String):[]};
+  });
+  return{foods,weeks:out,history,onlyDone:!!o.onlyDone};
 }
 function load(){
-  try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.week&&s.foods)return s}catch(e){}
+  for(const k of [KEY,OLDKEY]){
+    try{const raw=localStorage.getItem(k);if(raw)return normalize(JSON.parse(raw))}catch(e){}
+  }
   return fresh();
 }
-let S=load(), tab='menu', day=(new Date().getDay()+6)%7, charts=[];
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Impossibile salvare i dati')}}
-function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2600)}
+let S=load(), tab='menu', day=(new Date().getDay()+6)%7, vs=iso(monday(new Date())), charts=[];
+function save(){
+  Object.keys(S.weeks).forEach(k=>{const w=S.weeks[k];if(!Object.values(w.meals).some(m=>m.items.length||m.done))delete S.weeks[k]});
+  try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Impossibile salvare i dati')}
+}
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2800)}
 
 const mealKey=(d,k)=>d+'-'+k;
-const getMeal=(d,k)=>S.week.meals[mealKey(d,k)]||{items:[],done:false};
-const mealRef=(d,k)=>(S.week.meals[mealKey(d,k)]=S.week.meals[mealKey(d,k)]||{items:[],done:false});
+const curWeek=()=>S.weeks[vs]||{meals:{}};
+const getMeal=(d,k)=>curWeek().meals[mealKey(d,k)]||{items:[],done:false};
+const mealRef=(d,k)=>{const w=(S.weeks[vs]=S.weeks[vs]||{meals:{}});return w.meals[mealKey(d,k)]=w.meals[mealKey(d,k)]||{items:[],done:false}};
 const findFood=n=>{n=n.trim().toLowerCase();return S.foods.find(f=>f.name.trim().toLowerCase()===n)};
-function allItems(){return Object.values(S.week.meals).flatMap(m=>m.items)}
 
-function counts(week=S.week, foods=S.foods, onlyDone=S.onlyDone){
+function counts(week=curWeek()){
   const byFood={},byCat={};let total=0,meals=0;
   Object.values(week.meals).forEach(m=>{
     if(m.done)meals++;
     m.items.forEach(it=>{
-      if(onlyDone&&!it.done)return;
-      const f=foods.find(x=>x.name.trim().toLowerCase()===it.name.trim().toLowerCase());
-      const c=f?f.cat:it.cat;
+      if(S.onlyDone&&!it.done)return;
+      const f=findFood(it.name),c=f?f.cat:it.cat;
       if(f)byFood[f.id]=(byFood[f.id]||0)+1;
       byCat[c]=(byCat[c]||0)+1;total++;
     });
   });
   return{byFood,byCat,total,meals};
 }
-function state(n,max){return n>max?'over':n===max&&max>0?'reach':'ok'}
+const state=(n,max)=>n>max?'over':n===max&&max>0?'reach':'ok';
 const stLabel={ok:'nel limite',reach:'limite raggiunto',over:'limite superato'};
+const overList=c=>S.foods.filter(f=>f.max>0&&(c.byFood[f.id]||0)>=f.max);
 
 /* ---------- viste ---------- */
 function viewMenu(){
-  const c=counts();
-  let h='';
-  const nowMon=iso(monday(new Date()));
-  if(nowMon>S.week.start){
-    h+=`<div class="alert info"><i class="fa-solid fa-calendar-plus"></i><span>È iniziata una nuova settimana.</span><button data-act="newweek">Inizia nuova</button></div>`;
-  }
+  const c=counts();let h='';
   S.foods.forEach(f=>{
     const n=c.byFood[f.id]||0,s=state(n,f.max);
     if(s!=='ok')h+=`<div class="alert ${s==='over'?'bad':'warn'}"><i class="fa-solid fa-triangle-exclamation"></i><span>${esc(f.name)}: ${n}/${f.max}, ${stLabel[s]}.</span></div>`;
   });
-  h+='<div class="days" role="tablist">'+DAYS.map((_,i)=>{
-    const dt=addDays(parse(S.week.start),i);
-    const done=MEALS.every(m=>getMeal(i,m.k).done);
-    const isToday=iso(dt)===iso(new Date());
-    return `<button class="dchip ${i===day?'on':''} ${isToday?'today':''}" data-act="day" data-i="${i}" aria-label="${DAYS[i]} ${dt.getDate()}"><small>${SHORT[i]}</small>${dt.getDate()}<span class="dot">${done?'<b></b>':''}</span></button>`;
+  h+='<div class="days">'+DAYS.map((_,i)=>{
+    const dt=addDays(parse(vs),i),done=MEALS.every(m=>getMeal(i,m.k).done);
+    return `<button class="dchip ${i===day?'on':''} ${iso(dt)===iso(new Date())?'today':''}" data-act="day" data-i="${i}" aria-label="${DAYS[i]} ${dt.getDate()}"><small>${SHORT[i]}</small>${dt.getDate()}<span class="dot">${done?'<b></b>':''}</span></button>`;
   }).join('')+'</div>';
-  h+=`<h2 class="dtitle">${DAYS[day]} ${fmt(addDays(parse(S.week.start),day))}</h2>`;
+  h+=`<h2 class="dtitle">${DAYS[day]} ${fmt(addDays(parse(vs),day))}</h2>`;
   MEALS.forEach(m=>{
     const M=getMeal(day,m.k);
     h+=`<section class="card meal ${M.done?'done':''}">
@@ -222,7 +287,7 @@ function viewMenu(){
       <button class="mealchk" data-act="mealdone" data-m="${m.k}" aria-pressed="${M.done}"><i class="fa-solid fa-check"></i>${M.done?'Mangiato':'Da fare'}</button></div>
       <ul>${M.items.map(it=>{
         const f=findFood(it.name);let chip='';
-        if(f){const n=c.byFood[f.id]||0,s=state(n,f.max);chip=`<span class="chip ${s}">${n}/${f.max}</span>`}
+        if(f){const n=c.byFood[f.id]||0;chip=`<span class="chip ${state(n,f.max)}">${n}/${f.max}</span>`}
         return `<li class="it ${it.done?'eaten':''}">
           <button class="ck" data-act="itemdone" data-m="${m.k}" data-id="${it.id}" aria-pressed="${!!it.done}" aria-label="Segna come mangiato">${it.done?'<i class="fa-solid fa-check"></i>':''}</button>
           <button class="nm" data-act="edititem" data-m="${m.k}" data-id="${it.id}"><span class="t">${esc(it.name)}</span>${chip}</button>
@@ -237,6 +302,7 @@ function viewFoods(){
   const c=counts();
   let h=`<button class="pri wide" data-act="addfood"><i class="fa-solid fa-plus"></i> Nuovo alimento con limite</button>`;
   h+=`<label class="card switch"><input type="checkbox" data-act="onlydone" ${S.onlyDone?'checked':''}><span>Conta solo gli alimenti segnati come mangiati</span></label>`;
+  h+=`<p class="note" style="margin:0 4px 10px">Contatori della settimana ${rangeOf(vs)}</p>`;
   if(!S.foods.length)h+=`<div class="empty"><i class="fa-solid fa-gauge-high"></i>Aggiungi un alimento e imposta quante volte a settimana può comparire nel menu.</div>`;
   S.foods.forEach(f=>{
     const n=c.byFood[f.id]||0,s=state(n,f.max),cat=CATS[f.cat]||CATS.altro;
@@ -254,19 +320,18 @@ function viewFoods(){
 
 function viewStats(){
   const c=counts();
-  const over=S.foods.filter(f=>(c.byFood[f.id]||0)>=f.max&&f.max>0).length;
   let h=`<div class="tiles">
     <div class="tile" style="background:var(--menta)"><b>${c.meals}</b><span>pasti mangiati</span></div>
     <div class="tile" style="background:var(--cielo)"><b>${c.total}</b><span>alimenti</span></div>
-    <div class="tile" style="background:${over?'var(--pesca)':'var(--giallo)'}"><b>${over}</b><span>limiti raggiunti</span></div></div>`;
-  if(!c.total)return h+`<div class="card empty"><i class="fa-solid fa-chart-pie"></i>Inserisci qualche alimento nel menu per vedere le statistiche.</div>`;
+    <div class="tile" style="background:${overList(c).length?'var(--pesca)':'var(--giallo)'}"><b>${overList(c).length}</b><span>limiti raggiunti</span></div></div>`;
+  if(!c.total)return h+`<div class="card empty"><i class="fa-solid fa-chart-pie"></i>Nessun alimento in questa settimana (${rangeOf(vs)}).</div>`;
   h+=`<div class="card"><h3 style="margin-bottom:8px">Cosa è stato dato</h3><div class="chartbox"><canvas id="ch1"></canvas></div></div>`;
   const keys=Object.keys(CATS).filter(k=>CATS[k].t>0);
   const lacking=keys.filter(k=>(c.byCat[k]||0)<CATS[k].t*0.5).map(k=>CATS[k].n.toLowerCase());
   h+=`<div class="card"><h3>Bilanciamento</h3>`;
   keys.forEach(k=>{
-    const n=c.byCat[k]||0,t=CATS[k].t,p=Math.min(100,n/t*100);
-    h+=`<div class="bal"><span><i class="fa-solid ${CATS[k].i}" style="color:${CATS[k].c}"></i> ${CATS[k].n}</span><div class="bar"><i style="width:${p}%;background:${CATS[k].c}"></i></div><em>${n}/${t}</em></div>`;
+    const n=c.byCat[k]||0,t=CATS[k].t;
+    h+=`<div class="bal"><span><i class="fa-solid ${CATS[k].i}" style="color:${CATS[k].c}"></i> ${CATS[k].n}</span><div class="bar"><i style="width:${Math.min(100,n/t*100)}%;background:${CATS[k].c}"></i></div><em>${n}/${t}</em></div>`;
   });
   h+=lacking.length?`<div class="alert info" style="margin-top:12px"><i class="fa-solid fa-lightbulb"></i><span>Finora poco presenti: ${lacking.join(', ')}.</span></div>`
     :`<div class="alert info" style="margin-top:12px"><i class="fa-solid fa-circle-check"></i><span>Buona varietà: nessuna categoria è molto indietro.</span></div>`;
@@ -274,29 +339,53 @@ function viewStats(){
   return h;
 }
 
-function viewWeeks(){
-  const c=counts();
-  let h=`<div class="card"><h3>Settimana corrente</h3><p class="note" style="margin:2px 0 12px">${rangeOf(S.week.start)} · ${c.total} alimenti, ${c.meals} pasti mangiati</p>
-    <button class="pri wide" data-act="newweek"><i class="fa-solid fa-box-archive"></i> Archivia e inizia nuova settimana</button>
-    <button class="danger wide" data-act="clearweek"><i class="fa-solid fa-eraser"></i> Svuota senza archiviare</button></div>`;
-  h+=`<h2 class="dtitle">Storico</h2>`;
-  if(!S.history.length)h+=`<div class="card empty"><i class="fa-solid fa-clock-rotate-left"></i>Le settimane archiviate compariranno qui.</div>`;
-  S.history.slice().reverse().forEach(w=>{
-    h+=`<div class="card"><div class="fh"><div class="fn"><b>${rangeOf(w.start)}</b><span>${w.total} alimenti · ${w.meals} pasti mangiati</span></div>
-      <button class="x" data-act="delweek" data-id="${w.id}" aria-label="Elimina settimana"><i class="fa-solid fa-trash"></i></button></div>
-      <div class="cats">${Object.keys(w.byCat).map(k=>`<span class="chip" style="background:${(CATS[k]||CATS.altro).c}55">${(CATS[k]||CATS.altro).n} ${w.byCat[k]}</span>`).join('')}</div>
-      ${w.over.length?`<p class="note"><i class="fa-solid fa-triangle-exclamation" style="color:var(--warn)"></i> Limiti raggiunti: ${w.over.map(esc).join(', ')}</p>`:''}</div>`;
+function viewMore(){
+  const cw=iso(monday(new Date()));
+  let h=`<div class="card"><h3 style="margin-bottom:10px">Backup dei dati</h3>
+    <div class="two"><button class="pri" data-act="export"><i class="fa-solid fa-download"></i> Scarica Dati JSON</button>
+    <button class="sec" data-act="import"><i class="fa-solid fa-upload"></i> Carica Dati JSON</button></div>
+    <p class="note">Il file contiene menu di tutte le settimane, limiti e storico. Caricando un file i dati attuali vengono sostituiti.</p></div>`;
+  h+=`<div class="card"><h3 style="margin-bottom:4px">Settimana ${rangeOf(vs)}</h3>
+    <p class="note" style="margin:0 0 10px">Rimuove tutto il menu di questa settimana.</p>
+    <button class="danger wide" data-act="clearweek" style="margin:0"><i class="fa-solid fa-eraser"></i> Svuota questa settimana</button></div>`;
+  h+=`<h2 class="dtitle">Settimane registrate</h2>`;
+  const ks=Object.keys(S.weeks).sort().reverse();
+  if(!ks.length)h+=`<div class="card empty"><i class="fa-solid fa-calendar-days"></i>Le settimane con un menu compariranno qui. Usa le frecce in alto per spostarti.</div>`;
+  ks.forEach(k=>{
+    const c=counts(S.weeks[k]),ov=overList(c);
+    h+=`<button class="card wrow" data-act="gotoweek" data-w="${k}"><div class="fh"><div class="fn"><b>${rangeOf(k)}${k===cw?' · corrente':''}</b><span>${c.total} alimenti · ${c.meals} pasti mangiati</span></div><i class="fa-solid fa-chevron-right" style="color:var(--lilla)"></i></div>
+      <div class="cats">${Object.keys(c.byCat).map(x=>`<span class="chip" style="background:${CATS[x].c}66">${CATS[x].n} ${c.byCat[x]}</span>`).join('')}</div>
+      ${ov.length?`<p class="note"><i class="fa-solid fa-triangle-exclamation" style="color:var(--warn)"></i> Limiti raggiunti: ${ov.map(f=>esc(f.name)).join(', ')}</p>`:''}</button>`;
   });
+  if(S.history.length){
+    h+=`<h2 class="dtitle">Archivio precedente</h2>`;
+    S.history.slice().reverse().forEach(w=>{
+      h+=`<div class="card"><div class="fh"><div class="fn"><b>${rangeOf(w.start)}</b><span>${w.total} alimenti · ${w.meals} pasti mangiati</span></div>
+        <button class="x" data-act="delweek" data-id="${esc(w.id)}" aria-label="Elimina"><i class="fa-solid fa-trash"></i></button></div>
+        <div class="cats">${Object.keys(w.byCat).map(k=>`<span class="chip" style="background:${CATS[k].c}66">${CATS[k].n} ${w.byCat[k]}</span>`).join('')}</div>
+        ${w.over.length?`<p class="note">Limiti raggiunti: ${w.over.map(esc).join(', ')}</p>`:''}</div>`;
+    });
+  }
   return h;
 }
 
 /* ---------- render ---------- */
-const views={menu:viewMenu,foods:viewFoods,stats:viewStats,weeks:viewWeeks};
+const views={menu:viewMenu,foods:viewFoods,stats:viewStats,more:viewMore};
+function relLabel(){
+  const d=Math.round((parse(vs)-monday(new Date()))/(7*864e5));
+  if(d===0)return 'Settimana corrente';
+  if(d===-1)return 'Settimana scorsa';
+  if(d===1)return 'Settimana prossima';
+  return d<0?`${-d} settimane fa`:`Tra ${d} settimane`;
+}
 function render(){
   charts.forEach(c=>c.destroy());charts=[];
-  $('#range').textContent='Settimana '+rangeOf(S.week.start);
+  $('#range').textContent=rangeOf(vs)+' '+parse(vs).getFullYear();
+  $('#rel').textContent=relLabel();
+  $('#pick').value=vs;
   $('#app').innerHTML=views[tab]();
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
+  document.documentElement.style.setProperty('--hh',$('header').offsetHeight+'px');
   if(tab==='stats')drawCharts();
 }
 function drawCharts(){
@@ -307,6 +396,7 @@ function drawCharts(){
     data:{labels:ks.map(k=>CATS[k].n),datasets:[{data:ks.map(k=>c.byCat[k]),backgroundColor:ks.map(k=>CATS[k].c),borderWidth:3,borderColor:'#fff'}]},
     options:{maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'bottom',labels:{usePointStyle:true,font:{family:'Nunito',weight:'700'}}}}}}));
 }
+function setWeek(s,scroll=true){vs=s;render();if(scroll)window.scrollTo(0,0)}
 
 /* ---------- dialoghi ---------- */
 const dlg=$('#dlg');
@@ -343,7 +433,7 @@ function openItem(m,id){
     if(fo){sel.value=fo.cat;sel.disabled=true;hint.textContent=`Limite: max ${fo.max} a settimana`}
     else{sel.disabled=false;hint.textContent=''}};
   inp.addEventListener('input',sync);sync();
-  sel.form.addEventListener('formdata',e=>{if(sel.disabled)e.formData.set('c',sel.value)});
+  f.addEventListener('formdata',e=>{if(sel.disabled)e.formData.set('c',sel.value)});
   if(!it)setTimeout(()=>inp.focus(),50);
 }
 function openFood(id){
@@ -363,27 +453,44 @@ function openFood(id){
   });
 }
 
-/* ---------- azioni ---------- */
-function newWeek(archive){
-  const c=counts();
-  if(archive&&(c.total>0||c.meals>0)){
-    S.history.push({id:uid(),start:S.week.start,total:c.total,meals:c.meals,byCat:c.byCat,
-      over:S.foods.filter(f=>f.max>0&&(c.byFood[f.id]||0)>=f.max).map(f=>`${f.name} ${c.byFood[f.id]}/${f.max}`)});
-    if(S.history.length>104)S.history.shift();
-  }
-  let n=monday(new Date());
-  if(iso(n)<=S.week.start)n=addDays(parse(S.week.start),7);
-  S.week={start:iso(n),meals:{}};
-  day=Math.max(0,Math.min(6,Math.round((new Date()-n)/864e5)));
-  if(new Date()<n)day=0;
-  save();render();window.scrollTo(0,0);
-  toast(archive?'Settimana archiviata, contatori azzerati':'Settimana svuotata');
+/* ---------- backup ---------- */
+async function exportData(){
+  const name='menu-luniss-'+iso(new Date())+'.json';
+  const blob=new Blob([JSON.stringify({app:'menu-luniss',version:2,exportedAt:new Date().toISOString(),...S},null,2)],{type:'application/json'});
+  const ios=/iPhone|iPad/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  try{
+    const file=new File([blob],name,{type:'application/json'});
+    if(ios&&navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Menu Luniss'});return}
+  }catch(e){if(e&&e.name==='AbortError')return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  toast('File scaricato');
 }
+$('#file').addEventListener('change',e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const data=normalize(JSON.parse(r.result));
+      if(!confirm('Sostituire tutti i dati attuali con quelli del file?'))return;
+      S=data;save();render();toast('Dati ripristinati');
+    }catch(err){toast('File non valido: scegli un JSON di Menu Luniss')}
+  };
+  r.onerror=()=>toast('Impossibile leggere il file');
+  r.readAsText(f);
+});
+
+/* ---------- azioni ---------- */
 document.addEventListener('click',e=>{
   const nav=e.target.closest('[data-tab]');
   if(nav){tab=nav.dataset.tab;render();window.scrollTo(0,0);return}
   const b=e.target.closest('[data-act]');if(!b)return;
   const a=b.dataset.act,m=b.dataset.m,id=b.dataset.id;
+  if(a==='prev')return setWeek(iso(addDays(parse(vs),-7)),false);
+  if(a==='next')return setWeek(iso(addDays(parse(vs),7)),false);
+  if(a==='today'){day=(new Date().getDay()+6)%7;return setWeek(iso(monday(new Date())))}
+  if(a==='gotoweek'){tab='menu';return setWeek(b.dataset.w)}
   if(a==='day'){day=+b.dataset.i;render();return}
   if(a==='additem')return openItem(m);
   if(a==='edititem')return openItem(m,id);
@@ -394,14 +501,22 @@ document.addEventListener('click',e=>{
     R.done=!R.done;R.items.forEach(x=>x.done=R.done);save();render();return}
   if(a==='addfood')return openFood();
   if(a==='editfood')return openFood(id);
-  if(a==='delfood'){if(confirm('Eliminare questo limite? Gli alimenti già nel menu restano.')){S.foods=S.foods.filter(f=>f.id!==id);save();render()}return}
-  if(a==='newweek'){if(confirm('Archiviare la settimana e iniziarne una nuova? I contatori ripartono da zero.'))newWeek(true);return}
-  if(a==='clearweek'){if(confirm('Svuotare la settimana senza archiviarla?'))newWeek(false);return}
-  if(a==='delweek'){if(confirm('Eliminare questa settimana dallo storico?')){S.history=S.history.filter(w=>w.id!==id);save();render()}return}
+  if(a==='delfood'){if(confirm('Eliminare questo limite? Gli alimenti già nei menu restano.')){S.foods=S.foods.filter(f=>f.id!==id);save();render()}return}
+  if(a==='clearweek'){if(confirm('Svuotare il menu di questa settimana?')){delete S.weeks[vs];save();render();toast('Settimana svuotata')}return}
+  if(a==='delweek'){if(confirm('Eliminare questa settimana dall\'archivio?')){S.history=S.history.filter(w=>w.id!==id);save();render()}return}
+  if(a==='export')return exportData();
+  if(a==='import')return $('#file').click();
 });
 document.addEventListener('change',e=>{
   if(e.target.dataset.act==='onlydone'){S.onlyDone=e.target.checked;save();render()}
 });
+$('#pick').addEventListener('change',e=>{
+  if(!e.target.value)return;
+  const d=parse(e.target.value);
+  day=(d.getDay()+6)%7;setWeek(iso(monday(d)),false);
+});
+$('#pick').addEventListener('click',e=>{try{e.target.showPicker()}catch(err){}});
+window.addEventListener('resize',()=>document.documentElement.style.setProperty('--hh',$('header').offsetHeight+'px'));
 render();
 </script>
 </body>
