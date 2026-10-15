@@ -60,16 +60,20 @@ h2.dtitle{font-size:22px;margin:4px 2px 10px}
 .mealchk{padding:6px 12px;border-radius:999px;background:var(--bg);border:2px solid var(--line);font-weight:700;font-size:14px;display:flex;gap:6px;align-items:center}
 .mealchk[aria-pressed=true]{background:var(--ok);border-color:var(--ok);color:#fff}
 ul{list-style:none;margin:0;padding:0}
-li.it{display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px dashed var(--line)}
+li.it{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px dashed var(--line)}
 .ck{width:30px;height:30px;border-radius:50%;border:2px solid var(--lilla);display:grid;place-items:center;color:#fff;flex:0 0 auto}
 .ck[aria-pressed=true]{background:var(--ok);border-color:var(--ok)}
-.nm{flex:1;text-align:left;font-weight:700;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:4px 0}
+.nm{flex:1;min-width:0;text-align:left;font-weight:700;display:flex;flex-direction:column;align-items:flex-start;gap:5px;padding:2px 0}
 li.it.eaten .nm .t{text-decoration:line-through;color:var(--soft)}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
 .x{width:32px;height:32px;border-radius:50%;color:var(--soft);flex:0 0 auto}
 .x:hover{background:#FCE9E8;color:var(--bad)}
 .add{margin-top:6px;width:100%;padding:9px;border-radius:14px;background:var(--bg);color:var(--lilla-d);font-weight:700;border:2px dashed var(--lilla)}
-.chip{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--bg);color:var(--soft);white-space:nowrap}
-.chip.ok{background:#E2F6EC;color:#2F8F66}.chip.reach{background:#FFEBD2;color:#B96A12}.chip.over{background:#FDE0DF;color:#C0392B}
+.chip{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--bg);color:var(--ink);white-space:nowrap}
+.chip i{font-size:11px}
+.chip.reach{background:#FFE0B5;color:#8F500B}.chip.over{background:#FAC9C6;color:#9B2B22}
+.st{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px}
+.st.ok{background:#E2F6EC;color:#2F8F66}.st.reach{background:#FFEBD2;color:#B96A12}.st.over{background:#FDE0DF;color:#C0392B}.st.none{background:var(--bg);color:var(--soft)}
 .alert{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:16px;margin-bottom:10px;font-weight:600;font-size:14px}
 .alert.warn{background:#FFEBD2;color:#8F500B}.alert.bad{background:#FDE0DF;color:#9B2B22}.alert.info{background:var(--cielo);color:#245B84}
 .fh{display:flex;align-items:center;gap:10px}
@@ -97,8 +101,9 @@ li.it.eaten .nm .t{text-decoration:line-through;color:var(--soft)}
 .tile{border-radius:20px;padding:12px 8px;text-align:center}
 .tile b{display:block;font-family:var(--ff-h);font-size:26px;line-height:1.1}
 .tile span{font-size:12.5px;font-weight:700;color:var(--soft)}
-.chartbox{position:relative;height:250px}
-.bal{display:grid;grid-template-columns:96px 1fr 52px;gap:8px;align-items:center;margin:9px 0;font-size:14px;font-weight:700}
+.chartbox{position:relative;height:260px}
+.bal{display:grid;grid-template-columns:118px 1fr 46px;gap:8px;align-items:center;margin:9px 0;font-size:14px;font-weight:700}
+.bal span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bal .bar{margin:0}
 .bal em{font-style:normal;color:var(--soft);font-size:13px;text-align:right}
 .note{font-size:12.5px;color:var(--soft);margin:8px 0 0}
@@ -110,13 +115,31 @@ nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area
 nav button{flex:1;padding:8px 2px;border-radius:20px;font-size:12px;font-weight:700;color:var(--soft);display:flex;flex-direction:column;gap:2px;align-items:center}
 nav button i{font-size:18px}
 nav button.on{background:var(--lilla);color:#fff}
-dialog{border:0;border-radius:24px;padding:20px;width:min(92vw,400px);color:var(--ink);box-shadow:0 12px 50px rgba(40,30,90,.35)}
+dialog{border:0;border-radius:24px;padding:20px;width:min(92vw,420px);max-height:88vh;overflow-y:auto;color:var(--ink);box-shadow:0 12px 50px rgba(40,30,90,.35)}
 dialog::backdrop{background:rgba(59,54,89,.4)}
 dialog h3{margin-bottom:12px;font-size:21px}
-dialog label{display:block;font-weight:700;font-size:14px;margin-bottom:12px}
-dialog input[type=text],dialog input[type=number],dialog select{display:block;width:100%;margin-top:5px;padding:11px 12px;border-radius:12px;border:2px solid var(--line);font:inherit;background:#fff;color:var(--ink)}
+dialog label.f,.lbl{display:block;font-weight:700;font-size:14px;margin-bottom:12px}
+.lbl{margin-bottom:6px}
+dialog input[type=text],dialog input[type=number]{display:block;width:100%;margin-top:5px;padding:11px 12px;border-radius:12px;border:2px solid var(--line);font:inherit;background:#fff;color:var(--ink)}
 .row{display:flex;gap:10px;justify-content:flex-end;margin-top:6px}
 .hint{font-size:13px;color:var(--soft);margin:-4px 0 10px;min-height:18px;font-weight:600}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}
+.tag{position:relative;display:block}
+.tag input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0}
+.tag span{display:flex;gap:6px;align-items:center;padding:9px 13px;border-radius:999px;border:2px solid var(--c);background:#fff;font-weight:700;font-size:14px}
+.tag input:checked+span{background:var(--c);color:var(--t)}
+.tag input:checked+span::after{content:'\2713';font-weight:700}
+.tag input:focus-visible+span{outline:3px solid var(--lilla-d);outline-offset:2px}
+.icons{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:14px}
+.ic{position:relative;display:block}
+.ic input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0}
+.ic span{display:grid;place-items:center;height:42px;border-radius:12px;background:var(--bg);border:2px solid transparent;font-size:17px}
+.ic input:checked+span{border-color:var(--lilla-d);background:#EFEAFF;color:var(--lilla-d)}
+.ic input:focus-visible+span{outline:3px solid var(--lilla-d)}
+.sw{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.sw button{width:32px;height:32px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1px var(--line)}
+.sw button.on{box-shadow:0 0 0 3px var(--lilla-d)}
+.sw input{width:44px;height:36px;padding:0;border:0;background:none}
 #toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 92px);transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:14px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:30;max-width:88vw;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
@@ -137,7 +160,7 @@ dialog input[type=text],dialog input[type=number],dialog select{display:block;wi
 <main id="app"></main>
 <nav id="nav" aria-label="Sezioni">
   <button data-tab="menu"><i class="fa-solid fa-calendar-week"></i>Menu</button>
-  <button data-tab="foods"><i class="fa-solid fa-gauge-high"></i>Limiti</button>
+  <button data-tab="types"><i class="fa-solid fa-tags"></i>Tipi</button>
   <button data-tab="stats"><i class="fa-solid fa-chart-pie"></i>Statistiche</button>
   <button data-tab="more"><i class="fa-solid fa-gear"></i>Altro</button>
 </nav>
@@ -146,7 +169,7 @@ dialog input[type=text],dialog input[type=number],dialog select{display:block;wi
 <div id="toast" role="status"></div>
 
 <script>
-const KEY='menuLuniss.v2', OLDKEY='menuBimba.v1';
+const KEYS=['menuLuniss.v3','menuLuniss.v2','menuBimba.v1'], KEY=KEYS[0];
 const DAYS=['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
 const SHORT=['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
 const MEALS=[
@@ -156,17 +179,20 @@ const MEALS=[
   {k:'merenda',n:'Merenda',i:'fa-cookie-bite',c:'#FFF0B8'},
   {k:'cena',n:'Cena',i:'fa-moon',c:'#D3D9FA'}
 ];
-const CATS={
-  carne:{n:'Carne',i:'fa-drumstick-bite',c:'#F6A5A5',t:3},
-  pesce:{n:'Pesce',i:'fa-fish',c:'#8EC9F0',t:3},
-  legumi:{n:'Legumi',i:'fa-seedling',c:'#E3C27E',t:3},
-  uova:{n:'Uova',i:'fa-egg',c:'#FFD966',t:2},
-  latticini:{n:'Latticini',i:'fa-cheese',c:'#D9D0FF',t:7},
-  cereali:{n:'Cereali',i:'fa-wheat-awn',c:'#F2C9A0',t:10},
-  verdure:{n:'Verdure',i:'fa-carrot',c:'#9ADBB5',t:14},
-  frutta:{n:'Frutta',i:'fa-lemon',c:'#FFB3C7',t:14},
-  altro:{n:'Altro',i:'fa-star',c:'#CFCBE0',t:0}
-};
+const ICONS=['fa-drumstick-bite','fa-bacon','fa-fish','fa-shrimp','fa-egg','fa-cheese','fa-seedling','fa-carrot','fa-leaf','fa-lemon','fa-apple-whole','fa-wheat-awn','fa-bread-slice','fa-bowl-rice','fa-pizza-slice','fa-ice-cream','fa-star','fa-heart'];
+const COLORS=['#F6A5A5','#F2B8A0','#FFD966','#B8E3A0','#9ADBB5','#8EC9F0','#B9A9EF','#E3B6EC','#FFB3C7','#CFCBE0'];
+const DEFCATS=[
+  {id:'carne_bianca',name:'Carne bianca',color:'#FFC9A8',icon:'fa-drumstick-bite',max:4},
+  {id:'carne_rossa',name:'Carne rossa',color:'#F6A5A5',icon:'fa-bacon',max:0},
+  {id:'pesce',name:'Pesce',color:'#8EC9F0',icon:'fa-fish',max:0},
+  {id:'legumi',name:'Legumi',color:'#E3C27E',icon:'fa-seedling',max:0},
+  {id:'uova',name:'Uova',color:'#FFD966',icon:'fa-egg',max:0},
+  {id:'formaggi',name:'Formaggi',color:'#D9D0FF',icon:'fa-cheese',max:0},
+  {id:'verdure',name:'Verdure',color:'#9ADBB5',icon:'fa-carrot',max:0},
+  {id:'carboidrati',name:'Carboidrati',color:'#F2C9A0',icon:'fa-wheat-awn',max:0},
+  {id:'frutta',name:'Frutta',color:'#FFB3C7',icon:'fa-lemon',max:0}
+];
+const OLDMAP={carne:'carne_bianca',pesce:'pesce',legumi:'legumi',uova:'uova',latticini:'formaggi',cereali:'carboidrati',verdure:'verdure',frutta:'frutta'};
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
@@ -177,7 +203,9 @@ const addDays=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x};
 const monday=d=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()-((x.getDay()+6)%7));return x};
 const fmt=d=>d.toLocaleDateString('it-IT',{day:'numeric',month:'short'});
 const rangeOf=s=>{const a=parse(s);return fmt(a)+' – '+fmt(addDays(a,6))};
+const ink=h=>{const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (r*299+g*587+b*114)/1000>150?'#3B3659':'#ffffff'};
 const MKEY=/^[0-6]-(colazione|spuntino|pranzo|merenda|cena)$/;
+const HEX=/^#[0-9a-f]{6}$/i;
 
 /* ---------- icona, PNG per Home e manifest ---------- */
 (function(){
@@ -199,41 +227,58 @@ const MKEY=/^[0-6]-(colazione|spuntino|pranzo|merenda|cena)$/;
 })();
 
 /* ---------- dati ---------- */
-function fresh(){
-  return{foods:[
-    {id:uid(),name:'Tacchino',cat:'carne',max:4},
-    {id:uid(),name:'Pesce',cat:'pesce',max:3},
-    {id:uid(),name:'Legumi',cat:'legumi',max:3},
-    {id:uid(),name:'Uova',cat:'uova',max:2}
-  ],weeks:{},history:[],onlyDone:false};
-}
+function fresh(){return{cats:DEFCATS.map(c=>({...c})),weeks:{},history:[],onlyDone:false}}
 function normalize(o){
   if(!o||typeof o!=='object')throw new Error('formato');
   let weeks=o.weeks;
   if(!weeks&&o.week&&o.week.start)weeks={[o.week.start]:{meals:o.week.meals||{}}};
-  if(!weeks||typeof weeks!=='object'||!Array.isArray(o.foods))throw new Error('formato');
-  const foods=o.foods.filter(f=>f&&f.name).map(f=>({id:String(f.id||uid()),name:String(f.name).slice(0,60),cat:CATS[f.cat]?f.cat:'altro',max:Math.max(0,parseInt(f.max,10)||0)}));
-  const out={};
+  if(!weeks||typeof weeks!=='object')throw new Error('formato');
+  const legacy=!Array.isArray(o.cats), foodCat={};
+  let cats;
+  if(!legacy){
+    cats=o.cats.filter(c=>c&&c.name).map(c=>({id:String(c.id||uid()),name:String(c.name).slice(0,40),color:HEX.test(c.color)?c.color:'#CFCBE0',icon:ICONS.includes(c.icon)?c.icon:'fa-star',max:Math.max(0,parseInt(c.max,10)||0)}));
+  }else{
+    if(!Array.isArray(o.foods))throw new Error('formato');
+    cats=DEFCATS.map(c=>({...c,max:0}));
+    o.foods.forEach(f=>{
+      if(!f||!f.name)return;
+      const nm=String(f.name).trim().slice(0,40),max=Math.max(0,parseInt(f.max,10)||0);
+      let c=cats.find(x=>x.name.toLowerCase()===nm.toLowerCase());
+      if(c){if(!c.max)c.max=max}
+      else{const b=cats.find(x=>x.id===OLDMAP[f.cat]);c={id:'f_'+uid(),name:nm,color:b?b.color:'#CFCBE0',icon:b?b.icon:'fa-star',max};cats.push(c)}
+      foodCat[nm.toLowerCase()]=c.id;
+    });
+  }
+  const ids=new Set(cats.map(c=>c.id)), out={};
   Object.keys(weeks).forEach(k=>{
     if(!/^\d{4}-\d{2}-\d{2}$/.test(k)||!weeks[k]||!weeks[k].meals)return;
     const meals={};
     Object.keys(weeks[k].meals).forEach(mk=>{
       const m=weeks[k].meals[mk];
       if(!MKEY.test(mk)||!m||!Array.isArray(m.items))return;
-      const items=m.items.filter(i=>i&&i.name).map(i=>({id:String(i.id||uid()),name:String(i.name).slice(0,60),cat:CATS[i.cat]?i.cat:'altro',done:!!i.done}));
+      const items=m.items.filter(i=>i&&i.name).map(i=>{
+        let cs=[];
+        if(Array.isArray(i.cats))cs=i.cats.map(String);
+        else{
+          if(OLDMAP[i.cat])cs.push(OLDMAP[i.cat]);
+          const fc=foodCat[String(i.name).trim().toLowerCase()];if(fc)cs.push(fc);
+        }
+        return{id:String(i.id||uid()),name:String(i.name).slice(0,80),cats:[...new Set(cs)].filter(x=>ids.has(x)),done:!!i.done};
+      });
       meals[mk]={items,done:items.length>0&&!!m.done};
     });
     const mk=iso(monday(parse(k)));
     out[mk]={meals:Object.assign(out[mk]?out[mk].meals:{},meals)};
   });
   const history=(Array.isArray(o.history)?o.history:[]).filter(h=>h&&h.start&&h.byCat&&/^\d{4}-\d{2}-\d{2}$/.test(h.start)).map(h=>{
-    const byCat={};Object.keys(h.byCat).forEach(k=>byCat[CATS[k]?k:'altro']=Number(h.byCat[k])||0);
+    const byCat={};
+    Object.keys(h.byCat).forEach(k=>{const nk=legacy?(OLDMAP[k]||'altro'):k;byCat[nk]=(byCat[nk]||0)+(Number(h.byCat[k])||0)});
     return{id:String(h.id||uid()),start:h.start,total:Number(h.total)||0,meals:Number(h.meals)||0,byCat,over:Array.isArray(h.over)?h.over.map(String):[]};
   });
-  return{foods,weeks:out,history,onlyDone:!!o.onlyDone};
+  return{cats,weeks:out,history,onlyDone:!!o.onlyDone};
 }
 function load(){
-  for(const k of [KEY,OLDKEY]){
+  for(const k of KEYS){
     try{const raw=localStorage.getItem(k);if(raw)return normalize(JSON.parse(raw))}catch(e){}
   }
   return fresh();
@@ -243,37 +288,44 @@ function save(){
   Object.keys(S.weeks).forEach(k=>{const w=S.weeks[k];if(!Object.values(w.meals).some(m=>m.items.length||m.done))delete S.weeks[k]});
   try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Impossibile salvare i dati')}
 }
-function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2800)}
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),3200)}
 
+const cat=id=>S.cats.find(c=>c.id===id);
+const OTHER={id:'altro',name:'Altro',color:'#CFCBE0',icon:'fa-star',max:0};
 const mealKey=(d,k)=>d+'-'+k;
 const curWeek=()=>S.weeks[vs]||{meals:{}};
 const getMeal=(d,k)=>curWeek().meals[mealKey(d,k)]||{items:[],done:false};
 const mealRef=(d,k)=>{const w=(S.weeks[vs]=S.weeks[vs]||{meals:{}});return w.meals[mealKey(d,k)]=w.meals[mealKey(d,k)]||{items:[],done:false}};
-const findFood=n=>{n=n.trim().toLowerCase();return S.foods.find(f=>f.name.trim().toLowerCase()===n)};
 
 function counts(week=curWeek()){
-  const byFood={},byCat={};let total=0,meals=0;
+  const byCat={};let total=0,meals=0,uncat=0;
   Object.values(week.meals).forEach(m=>{
     if(m.done)meals++;
     m.items.forEach(it=>{
       if(S.onlyDone&&!it.done)return;
-      const f=findFood(it.name),c=f?f.cat:it.cat;
-      if(f)byFood[f.id]=(byFood[f.id]||0)+1;
-      byCat[c]=(byCat[c]||0)+1;total++;
+      total++;
+      const cs=it.cats.filter(id=>cat(id));
+      if(!cs.length)uncat++;
+      cs.forEach(id=>byCat[id]=(byCat[id]||0)+1);
     });
   });
-  return{byFood,byCat,total,meals};
+  return{byCat,total,meals,uncat};
 }
-const state=(n,max)=>n>max?'over':n===max&&max>0?'reach':'ok';
+const state=(n,max)=>max>0&&n>max?'over':max>0&&n===max?'reach':'ok';
 const stLabel={ok:'nel limite',reach:'limite raggiunto',over:'limite superato'};
-const overList=c=>S.foods.filter(f=>f.max>0&&(c.byFood[f.id]||0)>=f.max);
+const overList=c=>S.cats.filter(t=>t.max>0&&(c.byCat[t.id]||0)>=t.max);
+const cntText=(t,n)=>t.max>0?`${n}/${t.max}`:`${n}`;
+function chip(t,c){
+  const n=c.byCat[t.id]||0,s=state(n,t.max);
+  return `<span class="chip ${s==='ok'?'':s}" ${s==='ok'?`style="background:${t.color}88"`:''}><i class="fa-solid ${t.icon}"></i> ${esc(t.name)}${t.max>0?` ${n}/${t.max}`:''}</span>`;
+}
 
 /* ---------- viste ---------- */
 function viewMenu(){
   const c=counts();let h='';
-  S.foods.forEach(f=>{
-    const n=c.byFood[f.id]||0,s=state(n,f.max);
-    if(s!=='ok')h+=`<div class="alert ${s==='over'?'bad':'warn'}"><i class="fa-solid fa-triangle-exclamation"></i><span>${esc(f.name)}: ${n}/${f.max}, ${stLabel[s]}.</span></div>`;
+  S.cats.forEach(t=>{
+    const n=c.byCat[t.id]||0,s=state(n,t.max);
+    if(s!=='ok')h+=`<div class="alert ${s==='over'?'bad':'warn'}"><i class="fa-solid fa-triangle-exclamation"></i><span>${esc(t.name)}: ${n}/${t.max}, ${stLabel[s]}.</span></div>`;
   });
   h+='<div class="days">'+DAYS.map((_,i)=>{
     const dt=addDays(parse(vs),i),done=MEALS.every(m=>getMeal(i,m.k).done);
@@ -286,56 +338,56 @@ function viewMenu(){
       <div class="mh"><span class="mi" style="background:${m.c}"><i class="fa-solid ${m.i}"></i></span><h3>${m.n}</h3>
       <button class="mealchk" data-act="mealdone" data-m="${m.k}" aria-pressed="${M.done}"><i class="fa-solid fa-check"></i>${M.done?'Mangiato':'Da fare'}</button></div>
       <ul>${M.items.map(it=>{
-        const f=findFood(it.name);let chip='';
-        if(f){const n=c.byFood[f.id]||0;chip=`<span class="chip ${state(n,f.max)}">${n}/${f.max}</span>`}
+        const chips=it.cats.map(id=>cat(id)).filter(Boolean).map(t=>chip(t,c)).join('');
         return `<li class="it ${it.done?'eaten':''}">
           <button class="ck" data-act="itemdone" data-m="${m.k}" data-id="${it.id}" aria-pressed="${!!it.done}" aria-label="Segna come mangiato">${it.done?'<i class="fa-solid fa-check"></i>':''}</button>
-          <button class="nm" data-act="edititem" data-m="${m.k}" data-id="${it.id}"><span class="t">${esc(it.name)}</span>${chip}</button>
+          <button class="nm" data-act="edititem" data-m="${m.k}" data-id="${it.id}"><span class="t">${esc(it.name)}</span>${chips?`<span class="chips">${chips}</span>`:''}</button>
           <button class="x" data-act="delitem" data-m="${m.k}" data-id="${it.id}" aria-label="Rimuovi ${esc(it.name)}"><i class="fa-solid fa-xmark"></i></button></li>`;
       }).join('')}</ul>
-      <button class="add" data-act="additem" data-m="${m.k}"><i class="fa-solid fa-plus"></i> Aggiungi alimento</button></section>`;
+      <button class="add" data-act="additem" data-m="${m.k}"><i class="fa-solid fa-plus"></i> Aggiungi piatto</button></section>`;
   });
   return h;
 }
 
-function viewFoods(){
+function viewTypes(){
   const c=counts();
-  let h=`<button class="pri wide" data-act="addfood"><i class="fa-solid fa-plus"></i> Nuovo alimento con limite</button>`;
-  h+=`<label class="card switch"><input type="checkbox" data-act="onlydone" ${S.onlyDone?'checked':''}><span>Conta solo gli alimenti segnati come mangiati</span></label>`;
-  h+=`<p class="note" style="margin:0 4px 10px">Contatori della settimana ${rangeOf(vs)}</p>`;
-  if(!S.foods.length)h+=`<div class="empty"><i class="fa-solid fa-gauge-high"></i>Aggiungi un alimento e imposta quante volte a settimana può comparire nel menu.</div>`;
-  S.foods.forEach(f=>{
-    const n=c.byFood[f.id]||0,s=state(n,f.max),cat=CATS[f.cat]||CATS.altro;
+  let h=`<button class="pri wide" data-act="addcat"><i class="fa-solid fa-plus"></i> Nuovo tipo di alimento</button>`;
+  h+=`<label class="card switch"><input type="checkbox" data-act="onlydone" ${S.onlyDone?'checked':''}><span>Conta solo i piatti segnati come mangiati</span></label>`;
+  h+=`<p class="note" style="margin:0 4px 10px">Contatori della settimana ${rangeOf(vs)}. Un piatto con più tipi aumenta il contatore di ognuno.</p>`;
+  if(!S.cats.length)h+=`<div class="empty"><i class="fa-solid fa-tags"></i>Crea i tipi di alimenti (carne bianca, verdure...) e, se vuoi, un limite settimanale per ciascuno.</div>`;
+  S.cats.forEach(t=>{
+    const n=c.byCat[t.id]||0,s=state(n,t.max);
     const cls=s==='over'?'bad':s==='reach'?'warn':'';
-    const pct=f.max>0?Math.min(100,n/f.max*100):(n?100:0);
-    h+=`<div class="card"><div class="fh"><span class="mi" style="background:${cat.c}"><i class="fa-solid ${cat.i}"></i></span>
-      <div class="fn"><b>${esc(f.name)}</b><span>${cat.n} · max ${f.max} a settimana</span></div>
-      <div class="cnt ${cls}">${n}/${f.max}</div></div>
-      <div class="bar"><i class="${cls}" style="width:${pct}%"></i></div>
-      <div class="frow"><span class="chip ${s}">${stLabel[s]}</span>
-      <span><button class="link" data-act="editfood" data-id="${f.id}">Modifica</button><button class="link" style="color:var(--bad)" data-act="delfood" data-id="${f.id}">Elimina</button></span></div></div>`;
+    h+=`<div class="card"><div class="fh"><span class="mi" style="background:${t.color};color:${ink(t.color)}"><i class="fa-solid ${t.icon}"></i></span>
+      <div class="fn"><b>${esc(t.name)}</b><span>${t.max>0?`max ${t.max} a settimana`:'nessun limite'}</span></div>
+      <div class="cnt ${cls}">${cntText(t,n)}</div></div>
+      ${t.max>0?`<div class="bar"><i class="${cls}" style="width:${Math.min(100,n/t.max*100)}%"></i></div>`:'<div style="height:8px"></div>'}
+      <div class="frow"><span class="st ${t.max>0?s:'none'}">${t.max>0?stLabel[s]:'senza limite'}</span>
+      <span><button class="link" data-act="editcat" data-id="${t.id}">Modifica</button><button class="link" style="color:var(--bad)" data-act="delcat" data-id="${t.id}">Elimina</button></span></div></div>`;
   });
   return h;
 }
 
 function viewStats(){
-  const c=counts();
+  const c=counts(),ov=overList(c);
   let h=`<div class="tiles">
     <div class="tile" style="background:var(--menta)"><b>${c.meals}</b><span>pasti mangiati</span></div>
-    <div class="tile" style="background:var(--cielo)"><b>${c.total}</b><span>alimenti</span></div>
-    <div class="tile" style="background:${overList(c).length?'var(--pesca)':'var(--giallo)'}"><b>${overList(c).length}</b><span>limiti raggiunti</span></div></div>`;
-  if(!c.total)return h+`<div class="card empty"><i class="fa-solid fa-chart-pie"></i>Nessun alimento in questa settimana (${rangeOf(vs)}).</div>`;
-  h+=`<div class="card"><h3 style="margin-bottom:8px">Cosa è stato dato</h3><div class="chartbox"><canvas id="ch1"></canvas></div></div>`;
-  const keys=Object.keys(CATS).filter(k=>CATS[k].t>0);
-  const lacking=keys.filter(k=>(c.byCat[k]||0)<CATS[k].t*0.5).map(k=>CATS[k].n.toLowerCase());
+    <div class="tile" style="background:var(--cielo)"><b>${c.total}</b><span>piatti</span></div>
+    <div class="tile" style="background:${ov.length?'var(--pesca)':'var(--giallo)'}"><b>${ov.length}</b><span>limiti raggiunti</span></div></div>`;
+  const used=S.cats.filter(t=>c.byCat[t.id]);
+  if(!c.total)return h+`<div class="card empty"><i class="fa-solid fa-chart-pie"></i>Nessun piatto in questa settimana (${rangeOf(vs)}).</div>`;
+  if(used.length)h+=`<div class="card"><h3 style="margin-bottom:8px">Ripartizione dei tipi</h3><div class="chartbox"><canvas id="ch1"></canvas></div></div>`;
+  const mx=Math.max(1,...S.cats.map(t=>t.max>0?t.max:(c.byCat[t.id]||0)));
   h+=`<div class="card"><h3>Bilanciamento</h3>`;
-  keys.forEach(k=>{
-    const n=c.byCat[k]||0,t=CATS[k].t;
-    h+=`<div class="bal"><span><i class="fa-solid ${CATS[k].i}" style="color:${CATS[k].c}"></i> ${CATS[k].n}</span><div class="bar"><i style="width:${Math.min(100,n/t*100)}%;background:${CATS[k].c}"></i></div><em>${n}/${t}</em></div>`;
+  S.cats.forEach(t=>{
+    const n=c.byCat[t.id]||0,den=t.max>0?t.max:mx,s=state(n,t.max);
+    h+=`<div class="bal"><span><i class="fa-solid ${t.icon}" style="color:${t.color}"></i> ${esc(t.name)}</span><div class="bar"><i style="width:${Math.min(100,n/den*100)}%;background:${s==='over'?'var(--bad)':s==='reach'?'var(--warn)':t.color}"></i></div><em>${cntText(t,n)}</em></div>`;
   });
-  h+=lacking.length?`<div class="alert info" style="margin-top:12px"><i class="fa-solid fa-lightbulb"></i><span>Finora poco presenti: ${lacking.join(', ')}.</span></div>`
-    :`<div class="alert info" style="margin-top:12px"><i class="fa-solid fa-circle-check"></i><span>Buona varietà: nessuna categoria è molto indietro.</span></div>`;
-  h+=`<p class="note">I valori a destra sono porzioni settimanali indicative, solo come riferimento. Per le quantità giuste per tua figlia chiedi al pediatra.</p></div>`;
+  const miss=S.cats.filter(t=>!c.byCat[t.id]).map(t=>t.name.toLowerCase());
+  h+=miss.length?`<div class="alert info" style="margin-top:12px"><i class="fa-solid fa-lightbulb"></i><span>Non ancora presenti questa settimana: ${miss.map(esc).join(', ')}.</span></div>`
+    :`<div class="alert info" style="margin-top:12px"><i class="fa-solid fa-circle-check"></i><span>Tutti i tipi sono comparsi almeno una volta.</span></div>`;
+  if(c.uncat)h+=`<p class="note">${c.uncat} ${c.uncat===1?'piatto senza tipo non è conteggiato':'piatti senza tipo non sono conteggiati'} nei tipi.</p>`;
+  h+=`</div>`;
   return h;
 }
 
@@ -344,7 +396,7 @@ function viewMore(){
   let h=`<div class="card"><h3 style="margin-bottom:10px">Backup dei dati</h3>
     <div class="two"><button class="pri" data-act="export"><i class="fa-solid fa-download"></i> Scarica Dati JSON</button>
     <button class="sec" data-act="import"><i class="fa-solid fa-upload"></i> Carica Dati JSON</button></div>
-    <p class="note">Il file contiene menu di tutte le settimane, limiti e storico. Caricando un file i dati attuali vengono sostituiti.</p></div>`;
+    <p class="note">Il file contiene menu di tutte le settimane, tipi con colori e limiti, e storico. Caricando un file i dati attuali vengono sostituiti.</p></div>`;
   h+=`<div class="card"><h3 style="margin-bottom:4px">Settimana ${rangeOf(vs)}</h3>
     <p class="note" style="margin:0 0 10px">Rimuove tutto il menu di questa settimana.</p>
     <button class="danger wide" data-act="clearweek" style="margin:0"><i class="fa-solid fa-eraser"></i> Svuota questa settimana</button></div>`;
@@ -353,24 +405,23 @@ function viewMore(){
   if(!ks.length)h+=`<div class="card empty"><i class="fa-solid fa-calendar-days"></i>Le settimane con un menu compariranno qui. Usa le frecce in alto per spostarti.</div>`;
   ks.forEach(k=>{
     const c=counts(S.weeks[k]),ov=overList(c);
-    h+=`<button class="card wrow" data-act="gotoweek" data-w="${k}"><div class="fh"><div class="fn"><b>${rangeOf(k)}${k===cw?' · corrente':''}</b><span>${c.total} alimenti · ${c.meals} pasti mangiati</span></div><i class="fa-solid fa-chevron-right" style="color:var(--lilla)"></i></div>
-      <div class="cats">${Object.keys(c.byCat).map(x=>`<span class="chip" style="background:${CATS[x].c}66">${CATS[x].n} ${c.byCat[x]}</span>`).join('')}</div>
-      ${ov.length?`<p class="note"><i class="fa-solid fa-triangle-exclamation" style="color:var(--warn)"></i> Limiti raggiunti: ${ov.map(f=>esc(f.name)).join(', ')}</p>`:''}</button>`;
+    h+=`<button class="card wrow" data-act="gotoweek" data-w="${k}"><div class="fh"><div class="fn"><b>${rangeOf(k)}${k===cw?' · corrente':''}</b><span>${c.total} piatti · ${c.meals} pasti mangiati</span></div><i class="fa-solid fa-chevron-right" style="color:var(--lilla)"></i></div>
+      <div class="cats">${S.cats.filter(t=>c.byCat[t.id]).map(t=>`<span class="chip" style="background:${t.color}88"><i class="fa-solid ${t.icon}"></i> ${esc(t.name)} ${c.byCat[t.id]}</span>`).join('')}</div>
+      ${ov.length?`<p class="note"><i class="fa-solid fa-triangle-exclamation" style="color:var(--warn)"></i> Limiti raggiunti: ${ov.map(t=>esc(t.name)).join(', ')}</p>`:''}</button>`;
   });
   if(S.history.length){
     h+=`<h2 class="dtitle">Archivio precedente</h2>`;
     S.history.slice().reverse().forEach(w=>{
-      h+=`<div class="card"><div class="fh"><div class="fn"><b>${rangeOf(w.start)}</b><span>${w.total} alimenti · ${w.meals} pasti mangiati</span></div>
+      h+=`<div class="card"><div class="fh"><div class="fn"><b>${rangeOf(w.start)}</b><span>${w.total} piatti · ${w.meals} pasti mangiati</span></div>
         <button class="x" data-act="delweek" data-id="${esc(w.id)}" aria-label="Elimina"><i class="fa-solid fa-trash"></i></button></div>
-        <div class="cats">${Object.keys(w.byCat).map(k=>`<span class="chip" style="background:${CATS[k].c}66">${CATS[k].n} ${w.byCat[k]}</span>`).join('')}</div>
-        ${w.over.length?`<p class="note">Limiti raggiunti: ${w.over.map(esc).join(', ')}</p>`:''}</div>`;
+        <div class="cats">${Object.keys(w.byCat).map(k=>{const t=cat(k)||OTHER;return `<span class="chip" style="background:${t.color}88"><i class="fa-solid ${t.icon}"></i> ${esc(t.name)} ${w.byCat[k]}</span>`}).join('')}</div></div>`;
     });
   }
   return h;
 }
 
 /* ---------- render ---------- */
-const views={menu:viewMenu,foods:viewFoods,stats:viewStats,more:viewMore};
+const views={menu:viewMenu,types:viewTypes,stats:viewStats,more:viewMore};
 function relLabel(){
   const d=Math.round((parse(vs)-monday(new Date()))/(7*864e5));
   if(d===0)return 'Settimana corrente';
@@ -391,16 +442,15 @@ function render(){
 function drawCharts(){
   const el=$('#ch1');if(!el)return;
   if(typeof Chart==='undefined'){el.parentNode.innerHTML='<p class="note">Grafico non disponibile offline.</p>';return}
-  const c=counts(),ks=Object.keys(c.byCat);
+  const c=counts(),used=S.cats.filter(t=>c.byCat[t.id]);
   charts.push(new Chart(el,{type:'doughnut',
-    data:{labels:ks.map(k=>CATS[k].n),datasets:[{data:ks.map(k=>c.byCat[k]),backgroundColor:ks.map(k=>CATS[k].c),borderWidth:3,borderColor:'#fff'}]},
-    options:{maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'bottom',labels:{usePointStyle:true,font:{family:'Nunito',weight:'700'}}}}}}));
+    data:{labels:used.map(t=>`${t.name} (${c.byCat[t.id]})`),datasets:[{data:used.map(t=>c.byCat[t.id]),backgroundColor:used.map(t=>t.color),borderWidth:3,borderColor:'#fff'}]},
+    options:{maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'bottom',labels:{usePointStyle:true,font:{family:'Nunito',weight:'700'}}}}}}));
 }
 function setWeek(s,scroll=true){vs=s;render();if(scroll)window.scrollTo(0,0)}
 
 /* ---------- dialoghi ---------- */
 const dlg=$('#dlg');
-const catOpts=sel=>Object.keys(CATS).map(k=>`<option value="${k}" ${k===sel?'selected':''}>${CATS[k].n}</option>`).join('');
 function openDlg(html,onSubmit){
   dlg.innerHTML=html;
   const f=dlg.querySelector('form');
@@ -409,54 +459,75 @@ function openDlg(html,onSubmit){
   dlg.showModal();
   return f;
 }
+function dishMap(){
+  const m={};
+  Object.keys(S.weeks).sort().forEach(k=>Object.values(S.weeks[k].meals).forEach(M=>M.items.forEach(i=>{m[i.name.trim().toLowerCase()]={name:i.name,cats:i.cats}})));
+  return m;
+}
 function openItem(m,id){
-  const M=getMeal(day,m),it=id?M.items.find(x=>x.id===id):null;
-  const f=openDlg(`<form><h3>${it?'Modifica alimento':'Aggiungi alimento'}</h3>
-    <label>Alimento<input type="text" name="n" list="fl" required autocomplete="off" value="${esc(it?it.name:'')}"></label>
-    <datalist id="fl">${S.foods.map(x=>`<option value="${esc(x.name)}">`).join('')}</datalist>
-    <label>Tipo<select name="c">${catOpts(it?it.cat:'altro')}</select></label>
-    <p class="hint" id="hint"></p>
+  const M=getMeal(day,m),it=id?M.items.find(x=>x.id===id):null,dm=dishMap();
+  const sel=new Set(it?it.cats:[]);
+  const tags=S.cats.length?S.cats.map(t=>`<label class="tag" style="--c:${t.color};--t:${ink(t.color)}"><input type="checkbox" name="c" value="${t.id}" ${sel.has(t.id)?'checked':''}><span><i class="fa-solid ${t.icon}"></i> ${esc(t.name)}</span></label>`).join('')
+    :'<p class="hint">Nessun tipo disponibile: creali nella scheda Tipi.</p>';
+  const f=openDlg(`<form><h3>${it?'Modifica piatto':'Aggiungi piatto'}</h3>
+    <label class="f">Piatto<input type="text" name="n" list="fl" required autocomplete="off" placeholder="es. Pollo e zucchine" value="${esc(it?it.name:'')}"></label>
+    <datalist id="fl">${Object.values(dm).map(x=>`<option value="${esc(x.name)}">`).join('')}</datalist>
+    <div class="lbl">Tipi di alimenti (puoi sceglierne più di uno)</div>
+    <div class="tags">${tags}</div>
     <div class="row"><button type="button" class="ghost" data-close>Annulla</button><button class="pri">Salva</button></div></form>`,fd=>{
     const name=fd.get('n').trim();if(!name)return false;
-    const food=findFood(name),cat=food?food.cat:fd.get('c');
+    const ids=fd.getAll('c');
     const R=mealRef(day,m);
-    if(it){const t=R.items.find(x=>x.id===id);t.name=name;t.cat=cat}
-    else R.items.push({id:uid(),name,cat,done:false});
+    if(it){const t=R.items.find(x=>x.id===id);t.name=name;t.cats=ids}
+    else R.items.push({id:uid(),name,cats:ids,done:false});
     R.done=R.items.length>0&&R.items.every(x=>x.done);
     save();render();
-    if(food){const n=counts().byFood[food.id]||0;
-      if(n>food.max)toast(`Attenzione: ${food.name} supera il limite (${n}/${food.max})`);
-      else if(n===food.max)toast(`${food.name}: limite settimanale raggiunto (${n}/${food.max})`)}
+    const c=counts(),msgs=[];
+    ids.forEach(i=>{const t=cat(i);if(!t||t.max<=0)return;const n=c.byCat[i]||0;
+      if(n>t.max)msgs.push(`${t.name} oltre il limite (${n}/${t.max})`);
+      else if(n===t.max)msgs.push(`${t.name}: limite raggiunto (${n}/${t.max})`)});
+    if(msgs.length)toast(msgs.join(' · '));
   });
-  const inp=f.elements.n,sel=f.elements.c,hint=f.querySelector('#hint');
-  const sync=()=>{const fo=findFood(inp.value);
-    if(fo){sel.value=fo.cat;sel.disabled=true;hint.textContent=`Limite: max ${fo.max} a settimana`}
-    else{sel.disabled=false;hint.textContent=''}};
-  inp.addEventListener('input',sync);sync();
-  f.addEventListener('formdata',e=>{if(sel.disabled)e.formData.set('c',sel.value)});
-  if(!it)setTimeout(()=>inp.focus(),50);
+  if(!it){
+    let touched=false;
+    const inp=f.elements.n;
+    f.querySelectorAll('input[name=c]').forEach(cb=>cb.addEventListener('change',()=>touched=true));
+    inp.addEventListener('input',()=>{
+      const h=dm[inp.value.trim().toLowerCase()];
+      if(h&&!touched)f.querySelectorAll('input[name=c]').forEach(cb=>cb.checked=h.cats.includes(cb.value));
+    });
+    setTimeout(()=>inp.focus(),50);
+  }
 }
-function openFood(id){
-  const fo=id?S.foods.find(x=>x.id===id):null;
-  openDlg(`<form><h3>${fo?'Modifica limite':'Nuovo alimento'}</h3>
-    <label>Nome<input type="text" name="n" required autocomplete="off" value="${esc(fo?fo.name:'')}"></label>
-    <label>Tipo<select name="c">${catOpts(fo?fo.cat:'carne')}</select></label>
-    <label>Massimo a settimana<input type="number" name="m" min="0" max="35" inputmode="numeric" required value="${fo?fo.max:3}"></label>
+function openCat(id){
+  const t=id?cat(id):null,col=t?t.color:COLORS[0],ic=t?t.icon:ICONS[0];
+  const f=openDlg(`<form><h3>${t?'Modifica tipo':'Nuovo tipo'}</h3>
+    <label class="f">Nome<input type="text" name="n" required maxlength="40" autocomplete="off" placeholder="es. Carne bianca" value="${esc(t?t.name:'')}"></label>
+    <div class="lbl">Icona</div>
+    <div class="icons">${ICONS.map(i=>`<label class="ic"><input type="radio" name="i" value="${i}" ${i===ic?'checked':''} aria-label="${i.slice(3)}"><span><i class="fa-solid ${i}"></i></span></label>`).join('')}</div>
+    <div class="lbl">Colore</div>
+    <div class="sw">${COLORS.map(c=>`<button type="button" data-c="${c}" style="background:${c}" aria-label="Colore ${c}" class="${c.toLowerCase()===col.toLowerCase()?'on':''}"></button>`).join('')}<input type="color" name="col" value="${col}" aria-label="Colore personalizzato"></div>
+    <label class="f">Massimo a settimana (0 = nessun limite)<input type="number" name="m" min="0" max="50" inputmode="numeric" required value="${t?t.max:0}"></label>
     <div class="row"><button type="button" class="ghost" data-close>Annulla</button><button class="pri">Salva</button></div></form>`,fd=>{
     const name=fd.get('n').trim(),max=Math.max(0,parseInt(fd.get('m'),10)||0);
     if(!name)return false;
-    const dup=findFood(name);
-    if(dup&&(!fo||dup.id!==fo.id)){toast('Esiste già un alimento con questo nome');return false}
-    if(fo){fo.name=name;fo.cat=fd.get('c');fo.max=max}
-    else S.foods.push({id:uid(),name,cat:fd.get('c'),max});
+    const dup=S.cats.find(x=>x.name.toLowerCase()===name.toLowerCase());
+    if(dup&&(!t||dup.id!==t.id)){toast('Esiste già un tipo con questo nome');return false}
+    const o={name,color:fd.get('col'),icon:fd.get('i')||'fa-star',max};
+    if(t)Object.assign(t,o);else S.cats.push({id:'c_'+uid(),...o});
     save();render();
   });
+  const colIn=f.elements.col;
+  f.querySelectorAll('.sw button').forEach(b=>b.addEventListener('click',()=>{
+    colIn.value=b.dataset.c;f.querySelectorAll('.sw button').forEach(x=>x.classList.toggle('on',x===b));
+  }));
+  colIn.addEventListener('input',()=>f.querySelectorAll('.sw button').forEach(x=>x.classList.remove('on')));
 }
 
 /* ---------- backup ---------- */
 async function exportData(){
   const name='menu-luniss-'+iso(new Date())+'.json';
-  const blob=new Blob([JSON.stringify({app:'menu-luniss',version:2,exportedAt:new Date().toISOString(),...S},null,2)],{type:'application/json'});
+  const blob=new Blob([JSON.stringify({app:'menu-luniss',version:3,exportedAt:new Date().toISOString(),...S},null,2)],{type:'application/json'});
   const ios=/iPhone|iPad/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   try{
     const file=new File([blob],name,{type:'application/json'});
@@ -497,11 +568,16 @@ document.addEventListener('click',e=>{
   if(a==='delitem'){const R=mealRef(day,m);R.items=R.items.filter(x=>x.id!==id);R.done=R.items.length>0&&R.items.every(x=>x.done);save();render();return}
   if(a==='itemdone'){const R=mealRef(day,m),t=R.items.find(x=>x.id===id);t.done=!t.done;R.done=R.items.every(x=>x.done);save();render();return}
   if(a==='mealdone'){const R=mealRef(day,m);
-    if(!R.items.length){toast('Aggiungi prima almeno un alimento');return}
+    if(!R.items.length){toast('Aggiungi prima almeno un piatto');return}
     R.done=!R.done;R.items.forEach(x=>x.done=R.done);save();render();return}
-  if(a==='addfood')return openFood();
-  if(a==='editfood')return openFood(id);
-  if(a==='delfood'){if(confirm('Eliminare questo limite? Gli alimenti già nei menu restano.')){S.foods=S.foods.filter(f=>f.id!==id);save();render()}return}
+  if(a==='addcat')return openCat();
+  if(a==='editcat')return openCat(id);
+  if(a==='delcat'){
+    if(confirm('Eliminare questo tipo? Verrà tolto anche da tutti i piatti.')){
+      S.cats=S.cats.filter(t=>t.id!==id);
+      Object.values(S.weeks).forEach(w=>Object.values(w.meals).forEach(M=>M.items.forEach(i=>i.cats=i.cats.filter(x=>x!==id))));
+      save();render();
+    }return}
   if(a==='clearweek'){if(confirm('Svuotare il menu di questa settimana?')){delete S.weeks[vs];save();render();toast('Settimana svuotata')}return}
   if(a==='delweek'){if(confirm('Eliminare questa settimana dall\'archivio?')){S.history=S.history.filter(w=>w.id!==id);save();render()}return}
   if(a==='export')return exportData();
