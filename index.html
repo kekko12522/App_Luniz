@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Piccolo Menù">
+<meta name="theme-color" content="#FFF8F1">
+<meta name="format-detection" content="telephone=no">
+<title>Piccolo Menù</title>
+<link rel="apple-touch-icon" id="touch-icon" href="">
+<script>
+// Icona per la schermata Home generata al volo (nessun file esterno)
+(function(){try{var c=document.createElement('canvas');c.width=180;c.height=180;var x=c.getContext('2d');
+x.fillStyle='#F7C6D9';x.fillRect(0,0,180,180);x.font='96px serif';x.textAlign='center';x.textBaseline='middle';x.fillText('🥣',90,98);
+document.getElementById('touch-icon').href=c.toDataURL('image/png');}catch(e){}})();
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = { theme: { extend: { colors: { ink: '#3B3350', violet: { app: '#8B7CF6' } } } } };
+</script>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+html,body{height:100%;margin:0;overscroll-behavior-y:none;background:#FFF8F1}
+body{position:fixed;inset:0;width:100%;overflow:hidden;color:#3B3350;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  -webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+#root{position:fixed;inset:0;display:flex;flex-direction:column}
+input,select,textarea,button{font-family:inherit}
+input,select,textarea{font-size:16px;-webkit-user-select:text;user-select:text}
+button{-webkit-user-select:none;user-select:none;touch-action:manipulation}
+.scroll{overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:none}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{scrollbar-width:none}
+@keyframes up{from{transform:translateY(100%)}to{transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes pop{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+.sheet{animation:up .25s ease-out}
+.backdrop{animation:fade .2s ease-out}
+.toast{animation:pop .2s ease-out}
+@media print{
+  body{position:static;overflow:visible;background:#fff}
+  #root{position:static;display:block}
+  .scroll{overflow:visible!important}
+  .no-print{display:none!important}
+  .print-card{break-inside:avoid;box-shadow:none!important;border:1px solid #ccc!important}
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useRef } = React;
+
+const APP_VERSION = '1.0.0';
+const KEY = 'piccolo-menu-v1';
+
+const DAYS = [
+  { k: 'lun', l: 'Lun', full: 'Lunedì' }, { k: 'mar', l: 'Mar', full: 'Martedì' },
+  { k: 'mer', l: 'Mer', full: 'Mercoledì' }, { k: 'gio', l: 'Gio', full: 'Giovedì' },
+  { k: 'ven', l: 'Ven', full: 'Venerdì' }, { k: 'sab', l: 'Sab', full: 'Sabato' },
+  { k: 'dom', l: 'Dom', full: 'Domenica' },
+];
+const MEALS = [
+  { k: 'colazione', l: 'Colazione', e: '🥣', bg: '#FFE9D6' },
+  { k: 'spuntino', l: 'Spuntino', e: '🍎', bg: '#E3F6E8' },
+  { k: 'pranzo', l: 'Pranzo', e: '🍝', bg: '#DDEBFF' },
+  { k: 'merenda', l: 'Merenda', e: '🍪', bg: '#FFF3C9' },
+  { k: 'cena', l: 'Cena', e: '🍲', bg: '#EADFFF' },
+];
+
+const P = {
+  plus: <><path d="M5 12h14" /><path d="M12 5v14" /></>,
+  x: <><path d="M18 6 6 18" /><path d="M6 6l12 12" /></>,
+  check: <path d="M20 6 9 17l-5-5" />,
+  search: <><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></>,
+  trash: <><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></>,
+  star: <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />,
+  printer: <><path d="M6 9V2h12v7" /><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /><rect x="6" y="14" width="12" height="8" /></>,
+  archive: <><rect x="2" y="3" width="20" height="5" rx="1" /><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" /><path d="M10 12h4" /></>,
+  cart: <><circle cx="8" cy="21" r="1" /><circle cx="19" cy="21" r="1" /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" /></>,
+  calendar: <><rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4" /><path d="M8 2v4" /><path d="M3 10h18" /></>,
+  chart: <><path d="M3 3v18h18" /><path d="M18 17V9" /><path d="M13 17V5" /><path d="M8 17v-3" /></>,
+  shield: <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />,
+  bulb: <><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" /><path d="M9 18h6" /><path d="M10 22h4" /></>,
+  rotate: <><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /></>,
+  share: <><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" /><polyline points="16 6 12 2 8 6" /><line x1="12" y1="2" x2="12" y2="15" /></>,
+  pencil: <path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />,
+  utensils: <><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" /><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></>,
+  chevL: <path d="m15 18-6-6 6-6" />,
+  chevR: <path d="m9 18 6-6-6-6" />,
+  download: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></>,
+  upload: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></>,
+};
+const Icon = ({ n, size = 22, sw = 2, className = '' }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={sw}
+    strokeLinecap="round" strokeLinejoin="round" className={className}>{P[n]}</svg>
+);
+
+/* ---------- Dati di default ---------- */
+const uid = () => Math.random().toString(36).slice(2, 9);
+const mondayOf = (d) => { const x = new Date(d); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); x.setHours(0, 0, 0, 0); return x; };
+const fmtDate = (d) => new Date(d).toLocaleDateString('it-IT', { day: 'numeric', month: 'short' });
+const emptyWeek = () => Object.fromEntries(DAYS.map(d => [d.k, Object.fromEntries(MEALS.map(m => [m.k, []]))]));
+
+function defaults() {
+  const cats = [
+    { id: 'carne', name: 'Carne', emoji: '🍗', max: 4, min: 0, protein: true },
+    { id: 'pesce', name: 'Pesce', emoji: '🐟', max: 3, min: 2, protein: true },
+    { id: 'legumi', name: 'Legumi', emoji: '🫘', max: 4, min: 2, protein: true },
+    { id: 'uova', name: 'Uova', emoji: '🥚', max: 2, min: 0, protein: true },
+    { id: 'formaggi', name: 'Formaggi', emoji: '🧀', max: 2, min: 0, protein: true },
+    { id: 'cereali', name: 'Cereali e pasta', emoji: '🍝', max: 0, min: 0, protein: false },
+    { id: 'verdura', name: 'Verdura', emoji: '🥦', max: 0, min: 7, protein: false },
+    { id: 'frutta', name: 'Frutta', emoji: '🍎', max: 0, min: 7, protein: false },
+    { id: 'latticini', name: 'Latte e yogurt', emoji: '🥛', max: 0, min: 0, protein: false },
+    { id: 'altro', name: 'Altro', emoji: '🍪', max: 3, min: 0, protein: false },
+  ];
+  const F = (id, name, cat, emoji, quick) => ({ id, name, cat, emoji, quick: !!quick });
+  const foods = [
+    F('tacchino', 'Tacchino', 'carne', '🦃', 1), F('pollo', 'Pollo', 'carne', '🍗', 1), F('manzo', 'Manzo', 'carne', '🥩'),
+    F('vitello', 'Vitello', 'carne', '🥩'), F('prosciutto', 'Prosciutto cotto', 'carne', '🥓'),
+    F('merluzzo', 'Merluzzo', 'pesce', '🐟', 1), F('salmone', 'Salmone', 'pesce', '🍣'), F('platessa', 'Platessa', 'pesce', '🐟'),
+    F('orata', 'Orata', 'pesce', '🐠'),
+    F('lenticchie', 'Lenticchie', 'legumi', '🫘', 1), F('ceci', 'Ceci', 'legumi', '🫘'), F('piselli', 'Piselli', 'legumi', '🟢'),
+    F('fagioli', 'Fagioli', 'legumi', '🫘'),
+    F('uovo', 'Uovo', 'uova', '🥚', 1),
+    F('ricotta', 'Ricotta', 'formaggi', '🧀'), F('parmigiano', 'Parmigiano', 'formaggi', '🧀'), F('mozzarella', 'Mozzarella', 'formaggi', '🧀'),
+    F('pasta', 'Pasta', 'cereali', '🍝', 1), F('riso', 'Riso', 'cereali', '🍚'), F('pastina', 'Pastina', 'cereali', '🥣'),
+    F('pane', 'Pane', 'cereali', '🍞'), F('gnocchi', 'Gnocchi', 'cereali', '🥟'), F('fette', 'Fette biscottate', 'cereali', '🍞'),
+    F('zucchine', 'Zucchine', 'verdura', '🥒'), F('carote', 'Carote', 'verdura', '🥕', 1), F('spinaci', 'Spinaci', 'verdura', '🥬'),
+    F('broccoli', 'Broccoli', 'verdura', '🥦'), F('patate', 'Patate', 'verdura', '🥔'), F('zucca', 'Zucca', 'verdura', '🎃'),
+    F('mela', 'Mela', 'frutta', '🍎', 1), F('banana', 'Banana', 'frutta', '🍌', 1), F('pera', 'Pera', 'frutta', '🍐'),
+    F('arancia', 'Arancia', 'frutta', '🍊'), F('kiwi', 'Kiwi', 'frutta', '🥝'),
+    F('latte', 'Latte', 'latticini', '🥛', 1), F('yogurt', 'Yogurt', 'latticini', '🍦', 1),
+    F('biscotti', 'Biscotti', 'altro', '🍪', 1), F('crackers', 'Crackers', 'altro', '🍘'),
+  ];
+  return {
+    v: 1, cats, foods, foodLimits: { tacchino: 4, prosciutto: 1 },
+    week: emptyWeek(), weekStart: mondayOf(new Date()).toISOString(),
+    history: [], shop: { checked: {}, extra: [] },
+  };
+}
+
+function load() {
+  const d = defaults();
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) {
+      const p = JSON.parse(raw);
+      const s = { ...d, ...p };
+      const w = emptyWeek();
+      DAYS.forEach(dd => MEALS.forEach(m => { const a = s.week && s.week[dd.k] && s.week[dd.k][m.k]; if (Array.isArray(a)) w[dd.k][m.k] = a; }));
+      s.week = w;
+      s.shop = { checked: {}, extra: [], ...(s.shop || {}) };
+      if (!Array.isArray(s.history)) s.history = [];
+      return s;
+    }
+  } catch (e) {}
+  return d;
+}
+
+function computeCounts(s) {
+  const food = {}, cat = {};
+  const fm = Object.fromEntries(s.foods.map(f => [f.id, f]));
+  DAYS.forEach(d => MEALS.forEach(m => (s.week[d.k][m.k] || []).forEach(id => {
+    food[id] = (food[id] || 0) + 1;
+    const f = fm[id]; if (f) cat[f.cat] = (cat[f.cat] || 0) + 1;
+  })));
+  return { food, cat };
+}
+
+/* ---------- Stato limiti ---------- */
+const ST = {
+  green: { bg: '#D9F5E3', fg: '#1F7A4A', dot: '🟢' },
+  yellow: { bg: '#FFF0C2', fg: '#8A6100', dot: '🟡' },
+  red: { bg: '#FFD9DC', fg: '#B3263A', dot: '🔴' },
+  none: { bg: '#EFEAF7', fg: '#6B6382', dot: '' },
+};
+const RANK = { none: 0, green: 1, yellow: 2, red: 3 };
+function status(c, max) {
+  if (!max) return 'none';
+  if (c >= max) return 'red';
+  if (max >= 2 && c >= max - 1) return 'yellow';
+  if (c / max >= 0.75) return 'yellow';
+  return 'green';
+}
+function foodInfo(s, counts, f) {
+  const fl = s.foodLimits[f.id];
+  const cat = s.cats.find(c => c.id === f.cat);
+  const a = status(counts.food[f.id] || 0, fl);
+  const b = status(counts.cat[f.cat] || 0, cat ? cat.max : 0);
+  const st = RANK[a] >= RANK[b] ? a : b;
+  const badge = fl ? { c: counts.food[f.id] || 0, max: fl } : { c: counts.cat[f.cat] || 0, max: cat ? cat.max : 0 };
+  return { st, badge };
+}
+
+const Badge = ({ c, max }) => {
+  const t = ST[status(c, max)];
+  return (
+    <span className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[13px] font-bold tabular-nums whitespace-nowrap" style={{ background: t.bg, color: t.fg }}>
+      {t.dot && <span className="text-[9px]">{t.dot}</span>}{max ? `${c}/${max}` : `${c}×`}
+    </span>
+  );
+};
+
+/* ---------- Componenti base ---------- */
+function Sheet({ title, onClose, children, footer }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-end no-print backdrop" style={{ background: 'rgba(40,30,70,.38)' }} onClick={onClose}>
+      <div className="sheet w-full bg-white rounded-t-[28px] flex flex-col" style={{ maxHeight: '90dvh' }} onClick={e => e.stopPropagation()}>
+        <div className="flex items-center justify-between px-5 pt-5 pb-2">
+          <h2 className="text-[20px] font-extrabold">{title}</h2>
+          <button onClick={onClose} className="w-10 h-10 rounded-full bg-[#F1ECF9] flex items-center justify-center active:scale-95 transition-transform"><Icon n="x" size={20} /></button>
+        </div>
+        <div className="scroll px-5 pb-3 flex-1">{children}</div>
+        <div className="px-5 pt-2" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 14px)' }}>{footer}</div>
+      </div>
+    </div>
+  );
+}
+
+const Btn = ({ children, onClick, kind = 'primary', className = '', disabled }) => {
+  const k = {
+    primary: 'bg-[#8B7CF6] text-white', soft: 'bg-[#EFEAFF] text-[#5A49D6]',
+    danger: 'bg-[#FFE1E4] text-[#B3263A]', ghost: 'bg-[#F4F0FA] text-[#3B3350]',
+  }[kind];
+  return <button disabled={disabled} onClick={onClick} className={`h-12 px-5 rounded-2xl font-bold text-[16px] active:scale-95 transition-transform disabled:opacity-40 ${k} ${className}`}>{children}</button>;
+};
+
+function Stepper({ value, onChange, label, zeroLabel = 'Nessuno' }) {
+  return (
+    <div className="flex items-center justify-between bg-[#F7F3FD] rounded-2xl px-4 py-3">
+      <span className="font-semibold">{label}</span>
+      <div className="flex items-center gap-3">
+        <button onClick={() => onChange(Math.max(0, value - 1))} className="w-11 h-11 rounded-full bg-white text-xl font-bold shadow-sm active:scale-90 transition-transform">−</button>
+        <span className="min-w-[64px] text-center font-extrabold text-[17px] tabular-nums">{value > 0 ? value : zeroLabel}</span>
+        <button onClick={() => onChange(Math.min(99, value + 1))} className="w-11 h-11 rounded-full bg-white text-xl font-bold shadow-sm active:scale-90 transition-transform">+</button>
+      </div>
+    </div>
+  );
+}
+
+const Field = ({ label, children }) => (
+  <label className="block mb-3"><span className="block text-[13px] font-bold text-[#8A7FA3] mb-1.5 uppercase tracking-wide">{label}</span>{children}</label>
+);
+const inputCls = 'w-full h-12 rounded-2xl bg-[#F7F3FD] px-4 text-[16px] outline-none focus:ring-2 focus:ring-[#8B7CF6]';
+
+/* ---------- Suggerimenti ---------- */
+function nextSlot(s) {
+  const now = new Date(); const h = now.getHours();
+  const todayIdx = (now.getDay() + 6) % 7;
+  const curM = h < 9 ? 0 : h < 11 ? 1 : h < 15 ? 2 : h < 18 ? 3 : 4;
+  const inWeek = mondayOf(now).getTime() === new Date(s.weekStart).getTime();
+  const order = [];
+  if (inWeek) for (let d = todayIdx; d < 7; d++) for (let m = (d === todayIdx ? curM : 0); m < 5; m++) order.push([d, m]);
+  for (let d = 0; d < 7; d++) for (let m = 0; m < 5; m++) order.push([d, m]);
+  for (const [d, m] of order) if (!(s.week[DAYS[d].k][MEALS[m].k] || []).length) return { day: DAYS[d].k, meal: MEALS[m].k };
+  return null;
+}
+
+function suggest(s, counts, dayK, mealK) {
+  const usedToday = new Set(Object.values(s.week[dayK]).flat());
+  const catOf = id => s.cats.find(c => c.id === id);
+  const okFood = f => {
+    const fl = s.foodLimits[f.id]; if (fl && (counts.food[f.id] || 0) >= fl) return false;
+    const c = catOf(f.cat); if (c && c.max && (counts.cat[c.id] || 0) >= c.max) return false;
+    return true;
+  };
+  const pick = (catIds, n) => s.foods.filter(f => catIds.includes(f.cat) && okFood(f))
+    .sort((a, b) => ((usedToday.has(a.id) ? 1 : 0) - (usedToday.has(b.id) ? 1 : 0)) || ((counts.food[a.id] || 0) - (counts.food[b.id] || 0)) || a.name.localeCompare(b.name))
+    .slice(0, n);
+  const groups = [];
+  const addG = (catIds, label, note, n) => { const foods = pick(catIds, n); if (foods.length) groups.push({ label, note, foods }); };
+  if (mealK === 'pranzo' || mealK === 'cena') {
+    const other = Object.entries(s.week[dayK]).filter(([k]) => k !== mealK && (k === 'pranzo' || k === 'cena')).flatMap(([, a]) => a);
+    const usedCats = new Set(other.map(id => (s.foods.find(f => f.id === id) || {}).cat));
+    const prot = s.cats.filter(c => c.protein && !(c.max && (counts.cat[c.id] || 0) >= c.max)).map(c => {
+      const n = counts.cat[c.id] || 0;
+      const need = c.min && n < c.min ? 10 + (c.min - n) : 0;
+      const ratio = c.max ? n / c.max : 0.5;
+      return { c, score: need - ratio - (usedCats.has(c.id) ? 3 : 0) };
+    }).sort((a, b) => b.score - a.score).slice(0, 2);
+    prot.forEach(({ c }) => {
+      const n = counts.cat[c.id] || 0;
+      const note = c.min && n < c.min ? `Ne servono ancora ${c.min - n} per il minimo` : c.max ? `Restano ${c.max - n} porzioni` : '';
+      addG([c.id], `${c.emoji} ${c.name}`, note, 3);
+    });
+    addG(['cereali'], '🍝 Cereali e pasta', '', 3);
+    addG(['verdura'], '🥦 Verdura', '', 3);
+  } else if (mealK === 'colazione') {
+    addG(['latticini'], '🥛 Latte e yogurt', '', 3); addG(['cereali'], '🍞 Cereali', '', 3); addG(['frutta'], '🍎 Frutta', '', 3);
+  } else {
+    addG(['frutta'], '🍎 Frutta', '', 3); addG(['latticini'], '🥛 Latte e yogurt', '', 3); addG(['cereali'], '🍞 Cereali', '', 2);
+  }
+  return groups;
+}
+
+function weekText(week, nameOf, title) {
+  const lines = [title];
+  DAYS.forEach(d => {
+    lines.push('', d.full.toUpperCase());
+    MEALS.forEach(m => {
+      const items = (week[d.k][m.k] || []).map(nameOf);
+      lines.push(`${m.e} ${m.l}: ${items.length ? items.join(', ') : '—'}`);
+    });
+  });
+  return lines.join('\n');
+}
+
+/* ---------- Picker alimenti ---------- */
+function FoodPicker({ s, counts, day, meal, onAdd, onRemove, onClose, onCreate }) {
+  const [q, setQ] = useState('');
+  const [catF, setCatF] = useState('all');
+  const list = s.foods.filter(f => (catF === 'all' || f.cat === catF) && f.name.toLowerCase().includes(q.trim().toLowerCase()));
+  const items = s.week[day][meal] || [];
+  const dn = DAYS.find(d => d.k === day).full, mn = MEALS.find(m => m.k === meal);
+  const exact = s.foods.some(f => f.name.toLowerCase() === q.trim().toLowerCase());
+  return (
+    <Sheet title={`${mn.e} ${mn.l} · ${dn}`} onClose={onClose} footer={<Btn onClick={onClose} className="w-full">Fatto</Btn>}>
+      {items.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-3">
+          {items.map((id, i) => { const f = s.foods.find(x => x.id === id); if (!f) return null; return (
+            <button key={id + i} onClick={() => onRemove(day, meal, i)} className="flex items-center gap-1.5 rounded-full bg-[#EFEAFF] pl-3 pr-2 py-1.5 text-[15px] font-semibold active:scale-95 transition-transform">
+              {f.emoji} {f.name}<Icon n="x" size={16} /></button>); })}
+        </div>
+      )}
+      <div className="relative mb-3">
+        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#8A7FA3]"><Icon n="search" size={18} /></span>
+        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Cerca alimento…" className={inputCls + ' pl-11'} />
+      </div>
+      <div className="flex gap-2 overflow-x-auto no-scrollbar pb-3 -mx-5 px-5">
+        {[{ id: 'all', name: 'Tutti', emoji: '✨' }, ...s.cats].map(c => (
+          <button key={c.id} onClick={() => setCatF(c.id)} className={`shrink-0 rounded-full px-3.5 h-10 text-[14px] font-bold active:scale-95 transition-transform ${catF === c.id ? 'bg-[#8B7CF6] text-white' : 'bg-[#F1ECF9]'}`}>{c.emoji} {c.name}</button>
+        ))}
+      </div>
+      <div className="space-y-2 pb-2">
+        {list.map(f => { const inf = foodInfo(s, counts, f); const bg = inf.st === 'red' ? '#FFF0F1' : inf.st === 'yellow' ? '#FFFAE8' : '#F7F3FD'; return (
+          <button key={f.id} onClick={() => onAdd(day, meal, f.id)} className="w-full flex items-center gap-3 rounded-2xl px-4 h-14 text-left active:scale-[.98] transition-transform" style={{ background: bg }}>
+            <span className="text-2xl">{f.emoji}</span>
+            <span className="flex-1 font-semibold text-[16px]">{f.name}</span>
+            <Badge c={inf.badge.c} max={inf.badge.max} />
+            <span className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[#8B7CF6]"><Icon n="plus" size={18} /></span>
+          </button>); })}
+        {list.length === 0 && <p className="text-center text-[#8A7FA3] py-6">Nessun alimento trovato</p>}
+        {q.trim() && !exact && (
+          <button onClick={() => onCreate(q.trim(), catF === 'all' ? s.cats[0].id : catF)} className="w-full h-14 rounded-2xl border-2 border-dashed border-[#C9BFF5] text-[#5A49D6] font-bold active:scale-[.98] transition-transform">+ Crea «{q.trim()}»</button>
+        )}
+      </div>
+    </Sheet>
+  );
+}
+
+function EditFood({ s, food, onSave, onDelete, onClose }) {
+  const [f, setF] = useState(food);
+  const set = (k, v) => setF(p => ({ ...p, [k]: v }));
+  return (
+    <Sheet title={food.id ? 'Modifica alimento' : 'Nuovo alimento'} onClose={onClose}
+      footer={<div className="flex gap-2">
+        {food.id && <Btn kind="danger" onClick={() => onDelete(food.id)}><Icon n="trash" size={20} /></Btn>}
+        <Btn className="flex-1" disabled={!f.name.trim()} onClick={() => onSave({ ...f, name: f.name.trim() })}>Salva</Btn>
+      </div>}>
+      <Field label="Nome"><input value={f.name} onChange={e => set('name', e.target.value)} className={inputCls} placeholder="Es. Tacchino" /></Field>
+      <Field label="Emoji"><input value={f.emoji} onChange={e => set('emoji', e.target.value)} maxLength={4} className={inputCls} placeholder="🍽️" /></Field>
+      <Field label="Categoria">
+        <div className="flex flex-wrap gap-2">
+          {s.cats.map(c => <button key={c.id} onClick={() => set('cat', c.id)} className={`rounded-full px-3.5 h-10 text-[14px] font-bold active:scale-95 transition-transform ${f.cat === c.id ? 'bg-[#8B7CF6] text-white' : 'bg-[#F1ECF9]'}`}>{c.emoji} {c.name}</button>)}
+        </div>
+      </Field>
+      <div className="mb-3"><Stepper value={f.max || 0} onChange={v => set('max', v)} label="Max a settimana" zeroLabel="Nessun limite" /></div>
+      <button onClick={() => set('quick', !f.quick)} className="w-full flex items-center justify-between bg-[#F7F3FD] rounded-2xl px-4 h-14 active:scale-[.98] transition-transform">
+        <span className="font-semibold">⭐ Aggiunta rapida (1 tap)</span>
+        <span className={`w-12 h-7 rounded-full p-0.5 transition-colors ${f.quick ? 'bg-[#8B7CF6]' : 'bg-[#D8D1E8]'}`}><span className={`block w-6 h-6 rounded-full bg-white transition-transform ${f.quick ? 'translate-x-5' : ''}`} /></span>
+      </button>
+    </Sheet>
+  );
+}
+
+function EditCat({ cat, onSave, onDelete, onClose }) {
+  const [c, setC] = useState(cat);
+  const set = (k, v) => setC(p => ({ ...p, [k]: v }));
+  return (
+    <Sheet title={cat.id ? 'Modifica categoria' : 'Nuova categoria'} onClose={onClose}
+      footer={<div className="flex gap-2">
+        {cat.id && <Btn kind="danger" onClick={() => onDelete(cat.id)}><Icon n="trash" size={20} /></Btn>}
+        <Btn className="flex-1" disabled={!c.name.trim()} onClick={() => onSave({ ...c, name: c.name.trim() })}>Salva</Btn>
+      </div>}>
+      <Field label="Nome"><input value={c.name} onChange={e => set('name', e.target.value)} className={inputCls} placeholder="Es. Pesce" /></Field>
+      <Field label="Emoji"><input value={c.emoji} onChange={e => set('emoji', e.target.value)} maxLength={4} className={inputCls} /></Field>
+      <div className="space-y-2 mb-3">
+        <Stepper value={c.max || 0} onChange={v => set('max', v)} label="Massimo a settimana" zeroLabel="Nessun limite" />
+        <Stepper value={c.min || 0} onChange={v => set('min', v)} label="Minimo a settimana" zeroLabel="Nessuno" />
+      </div>
+      <button onClick={() => set('protein', !c.protein)} className="w-full flex items-center justify-between bg-[#F7F3FD] rounded-2xl px-4 h-14 active:scale-[.98] transition-transform">
+        <span className="font-semibold">🍽️ Piatto principale (proteine)</span>
+        <span className={`w-12 h-7 rounded-full p-0.5 transition-colors ${c.protein ? 'bg-[#8B7CF6]' : 'bg-[#D8D1E8]'}`}><span className={`block w-6 h-6 rounded-full bg-white transition-transform ${c.protein ? 'translate-x-5' : ''}`} /></span>
+      </button>
+    </Sheet>
+  );
+}
+
+/* ---------- Tab Menu ---------- */
+function MenuTab({ s, counts, day, setDay, quickMeal, setQuickMeal, addFood, removeFood, openPicker, clearDay }) {
+  const touch = useRef(null);
+  const di = DAYS.findIndex(d => d.k === day);
+  const todayK = DAYS[(new Date().getDay() + 6) % 7].k;
+  const filled = dk => MEALS.filter(m => (s.week[dk][m.k] || []).length).length;
+  useEffect(() => { const el = document.getElementById('dt-' + day); if (el && el.scrollIntoView) el.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' }); }, [day]);
+  const onTS = e => { const t = e.touches[0]; touch.current = { x: t.clientX, y: t.clientY }; };
+  const onTE = e => {
+    const st = touch.current; if (!st) return; touch.current = null;
+    const t = e.changedTouches[0]; const dx = t.clientX - st.x, dy = t.clientY - st.y;
+    if (Math.abs(dx) > 70 && Math.abs(dy) < 45) setDay(DAYS[dx < 0 ? Math.min(6, di + 1) : Math.max(0, di - 1)].k);
+  };
+  const quick = s.foods.filter(f => f.quick);
+  const qm = MEALS.find(m => m.k === quickMeal);
+  return (
+    <div>
+      <div className="flex gap-2 overflow-x-auto no-scrollbar px-4 pt-1 pb-3">
+        {DAYS.map(d => (
+          <button id={'dt-' + d.k} key={d.k} onClick={() => setDay(d.k)} className={`relative shrink-0 w-[58px] h-[64px] rounded-2xl flex flex-col items-center justify-center active:scale-95 transition-transform ${day === d.k ? 'bg-[#8B7CF6] text-white shadow-md' : 'bg-white text-[#3B3350] shadow-sm'}`}>
+            <span className="text-[15px] font-extrabold">{d.l}</span>
+            <span className={`text-[12px] font-semibold ${day === d.k ? 'text-white/80' : 'text-[#8A7FA3]'}`}>{filled(d.k)}/5</span>
+            {todayK === d.k && <span className={`absolute top-1.5 right-2 w-1.5 h-1.5 rounded-full ${day === d.k ? 'bg-white' : 'bg-[#F27C9B]'}`} />}
+          </button>
+        ))}
+      </div>
+
+      <div className="px-4 mb-3">
+        <div className="bg-white rounded-3xl p-4 shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-extrabold text-[17px]">⚡ Aggiunta rapida</h3>
+            <span className="text-[13px] font-semibold text-[#8A7FA3]">{DAYS[di].l} · {qm.l}</span>
+          </div>
+          <div className="flex gap-1.5 mb-3">
+            {MEALS.map(m => <button key={m.k} onClick={() => setQuickMeal(m.k)} className={`flex-1 h-11 rounded-xl text-xl active:scale-95 transition-transform ${quickMeal === m.k ? 'ring-2 ring-[#8B7CF6]' : ''}`} style={{ background: m.bg }}>{m.e}</button>)}
+          </div>
+          <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1 pb-1">
+            {quick.map(f => { const inf = foodInfo(s, counts, f); return (
+              <button key={f.id} onClick={() => addFood(day, quickMeal, f.id)} className="shrink-0 flex flex-col items-center gap-1 rounded-2xl px-3 py-2 min-w-[78px] active:scale-90 transition-transform" style={{ background: inf.st === 'red' ? '#FFF0F1' : inf.st === 'yellow' ? '#FFFAE8' : '#F7F3FD' }}>
+                <span className="text-2xl">{f.emoji}</span>
+                <span className="text-[13px] font-bold leading-tight">{f.name.split(' ')[0]}</span>
+                <Badge c={inf.badge.c} max={inf.badge.max} />
+              </button>); })}
+            {quick.length === 0 && <p className="text-[14px] text-[#8A7FA3] py-2">Nessun alimento rapido: attiva ⭐ da «Limiti».</p>}
+          </div>
+        </div>
+      </div>
+
+      <div className="px-4 space-y-3" onTouchStart={onTS} onTouchEnd={onTE}>
+        <div className="flex items-center justify-between px-1">
+          <h3 className="text-[20px] font-extrabold">{DAYS[di].full}</h3>
+          <button onClick={() => clearDay(day)} className="text-[14px] font-bold text-[#B3263A] h-9 px-3 rounded-full bg-[#FFE9EB] active:scale-95 transition-transform">Svuota giorno</button>
+        </div>
+        {MEALS.map(m => {
+          const items = s.week[day][m.k] || [];
+          return (
+            <div key={m.k} className="rounded-3xl p-4 shadow-sm" style={{ background: m.bg }}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2"><span className="text-2xl">{m.e}</span><span className="font-extrabold text-[17px]">{m.l}</span></div>
+                <button onClick={() => openPicker(day, m.k)} className="w-11 h-11 rounded-full bg-white text-[#5A49D6] flex items-center justify-center shadow-sm active:scale-90 transition-transform"><Icon n="plus" size={22} sw={2.5} /></button>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-2.5 empty:hidden">
+                {items.map((id, i) => { const f = s.foods.find(x => x.id === id); if (!f) return null; const st = foodInfo(s, counts, f).st; return (
+                  <span key={id + i} className="flex items-center gap-1.5 rounded-full pl-3 pr-1.5 h-9 text-[15px] font-semibold" style={{ background: st === 'red' ? '#FFD9DC' : st === 'yellow' ? '#FFF0C2' : '#fff' }}>
+                    {f.emoji} {f.name}
+                    <button onClick={() => removeFood(day, m.k, i)} className="w-7 h-7 rounded-full bg-black/5 flex items-center justify-center active:scale-90 transition-transform"><Icon n="x" size={14} /></button>
+                  </span>); })}
+              </div>
+              {items.length === 0 && <button onClick={() => openPicker(day, m.k)} className="mt-2 text-[14px] text-[#6B6382] font-semibold">Tocca + per aggiungere</button>}
+            </div>
+          );
+        })}
+        <p className="text-center text-[12px] text-[#A59BBE] pt-1 pb-2">Scorri a destra/sinistra per cambiare giorno</p>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Tab Limiti ---------- */
+function LimitsTab({ s, counts, editFood, editCat, toggleQuick }) {
+  return (
+    <div className="px-4 space-y-3 pb-2">
+      <div className="flex gap-2">
+        <Btn className="flex-1 !h-11 !text-[15px]" onClick={() => editFood({ name: '', cat: s.cats[0].id, emoji: '🍽️', quick: false, max: 0 })}>+ Alimento</Btn>
+        <Btn kind="soft" className="flex-1 !h-11 !text-[15px]" onClick={() => editCat({ name: '', emoji: '🍽️', max: 0, min: 0, protein: false })}>+ Categoria</Btn>
+      </div>
+      {s.cats.map(c => {
+        const n = counts.cat[c.id] || 0; const st = ST[status(n, c.max)];
+        const foods = s.foods.filter(f => f.cat === c.id);
+        return (
+          <div key={c.id} className="bg-white rounded-3xl p-4 shadow-sm">
+            <button onClick={() => editCat(c)} className="w-full flex items-center gap-3 text-left active:scale-[.99] transition-transform">
+              <span className="text-3xl">{c.emoji}</span>
+              <div className="flex-1 min-w-0">
+                <div className="font-extrabold text-[17px] truncate">{c.name}</div>
+                <div className="text-[13px] text-[#8A7FA3] font-semibold">{c.max ? `max ${c.max}` : 'nessun max'}{c.min ? ` · min ${c.min}` : ''}</div>
+              </div>
+              <Badge c={n} max={c.max} />
+              <span className="text-[#B8AED0]"><Icon n="pencil" size={18} /></span>
+            </button>
+            {c.max > 0 && <div className="h-2 rounded-full bg-[#F1ECF9] mt-3 overflow-hidden"><div className="h-full rounded-full transition-all" style={{ width: Math.min(100, (n / c.max) * 100) + '%', background: st.fg }} /></div>}
+            {c.min > 0 && n < c.min && <p className="text-[13px] font-semibold text-[#8A6100] mt-2">Mancano {c.min - n} porzioni per il minimo</p>}
+            <div className="mt-3 space-y-1.5">
+              {foods.map(f => { const fc = counts.food[f.id] || 0; const fl = s.foodLimits[f.id] || 0; return (
+                <div key={f.id} className="flex items-center gap-2 bg-[#F9F6FD] rounded-2xl pl-3 pr-1.5 h-12">
+                  <button onClick={() => editFood({ ...f, max: fl })} className="flex-1 flex items-center gap-2 text-left h-full active:opacity-60">
+                    <span className="text-xl">{f.emoji}</span><span className="font-semibold text-[15px] truncate">{f.name}</span>
+                  </button>
+                  <Badge c={fc} max={fl} />
+                  <button onClick={() => toggleQuick(f.id)} className={`w-10 h-10 rounded-full flex items-center justify-center active:scale-90 transition-transform ${f.quick ? 'text-[#E8A200]' : 'text-[#CFC7E0]'}`}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill={f.quick ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinejoin="round">{P.star}</svg>
+                  </button>
+                </div>); })}
+              {foods.length === 0 && <p className="text-[14px] text-[#A59BBE] px-1">Nessun alimento</p>}
+            </div>
+          </div>
+        );
+      })}
+      <p className="text-center text-[12px] text-[#A59BBE] px-4 pt-1">I limiti sono valori di partenza modificabili: concordali con il pediatra.</p>
+    </div>
+  );
+}
+
+/* ---------- Tab Statistiche ---------- */
+function StatsTab({ s, counts, addFood }) {
+  const total = DAYS.length * MEALS.length;
+  const filledMeals = DAYS.reduce((a, d) => a + MEALS.filter(m => (s.week[d.k][m.k] || []).length).length, 0);
+  const entries = Object.values(counts.food).reduce((a, b) => a + b, 0);
+  const pct = Math.round((filledMeals / total) * 100);
+  const reached = s.cats.filter(c => c.max && (counts.cat[c.id] || 0) >= c.max).length + s.foods.filter(f => s.foodLimits[f.id] && (counts.food[f.id] || 0) >= s.foodLimits[f.id]).length;
+  const R = 48, C = 2 * Math.PI * R;
+  const slot = useMemo(() => nextSlot(s), [s]);
+  const groups = slot ? suggest(s, counts, slot.day, slot.meal) : [];
+  const slotMeal = slot && MEALS.find(m => m.k === slot.meal);
+  const slotDay = slot && DAYS.find(d => d.k === slot.day);
+  const missing = s.cats.filter(c => c.min && (counts.cat[c.id] || 0) < c.min);
+  const full = s.cats.filter(c => c.max && (counts.cat[c.id] || 0) >= c.max);
+  return (
+    <div className="px-4 space-y-3 pb-2">
+      <div className="bg-white rounded-3xl p-4 shadow-sm flex items-center gap-4">
+        <svg width="120" height="120" viewBox="0 0 120 120" className="shrink-0">
+          <circle cx="60" cy="60" r={R} fill="none" stroke="#F1ECF9" strokeWidth="12" />
+          <circle cx="60" cy="60" r={R} fill="none" stroke="#8B7CF6" strokeWidth="12" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C * (1 - pct / 100)} transform="rotate(-90 60 60)" style={{ transition: 'stroke-dashoffset .5s' }} />
+          <text x="60" y="58" textAnchor="middle" fontSize="26" fontWeight="800" fill="#3B3350">{pct}%</text>
+          <text x="60" y="76" textAnchor="middle" fontSize="11" fontWeight="700" fill="#8A7FA3">settimana</text>
+        </svg>
+        <div className="flex-1 grid grid-cols-1 gap-2">
+          <div className="bg-[#F7F3FD] rounded-2xl px-3 py-2"><div className="text-[12px] font-bold text-[#8A7FA3]">PASTI PIANIFICATI</div><div className="text-[20px] font-extrabold">{filledMeals}<span className="text-[#A59BBE] text-[15px]">/{total}</span></div></div>
+          <div className="flex gap-2">
+            <div className="flex-1 bg-[#F7F3FD] rounded-2xl px-3 py-2"><div className="text-[11px] font-bold text-[#8A7FA3]">PORZIONI</div><div className="text-[18px] font-extrabold">{entries}</div></div>
+            <div className="flex-1 bg-[#FFF0F1] rounded-2xl px-3 py-2"><div className="text-[11px] font-bold text-[#B3263A]">LIMITI 🔴</div><div className="text-[18px] font-extrabold text-[#B3263A]">{reached}</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-3xl p-4 shadow-sm">
+        <h3 className="font-extrabold text-[17px] mb-3">📅 Giorni</h3>
+        <div className="flex justify-between">
+          {DAYS.map(d => { const n = MEALS.filter(m => (s.week[d.k][m.k] || []).length).length; return (
+            <div key={d.k} className="flex flex-col items-center gap-1.5">
+              <div className="flex flex-col-reverse gap-1">{MEALS.map((m, i) => <span key={m.k} className="w-6 h-3.5 rounded-md" style={{ background: i < n ? '#8B7CF6' : '#F1ECF9' }} />)}</div>
+              <span className="text-[12px] font-bold text-[#8A7FA3]">{d.l}</span>
+            </div>); })}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-3xl p-4 shadow-sm">
+        <h3 className="font-extrabold text-[17px] mb-3">📊 Categorie</h3>
+        <div className="space-y-3">
+          {s.cats.map(c => { const n = counts.cat[c.id] || 0; const t = ST[status(n, c.max)]; const ref = c.max || c.min || Math.max(n, 1); return (
+            <div key={c.id}>
+              <div className="flex items-center justify-between mb-1"><span className="font-semibold text-[15px]">{c.emoji} {c.name}</span><Badge c={n} max={c.max} /></div>
+              <div className="h-2.5 rounded-full bg-[#F1ECF9] overflow-hidden relative">
+                <div className="h-full rounded-full transition-all" style={{ width: Math.min(100, (n / ref) * 100) + '%', background: c.max ? t.fg : '#8B7CF6' }} />
+              </div>
+              {c.min > 0 && <div className="text-[12px] text-[#8A7FA3] mt-0.5">minimo {c.min}</div>}
+            </div>); })}
+        </div>
+      </div>
+
+      <div className="bg-white rounded-3xl p-4 shadow-sm">
+        <h3 className="font-extrabold text-[17px] mb-3 flex items-center gap-2"><span className="text-[#E8A200]"><Icon n="bulb" size={20} /></span> Consigli smart</h3>
+        {slot ? (
+          <div className="rounded-2xl p-3 mb-3" style={{ background: slotMeal.bg }}>
+            <div className="font-extrabold mb-2">{slotMeal.e} Prossimo pasto libero: {slotMeal.l} · {slotDay.full}</div>
+            {groups.length === 0 && <p className="text-[14px]">Nessun suggerimento: i limiti sono quasi tutti raggiunti.</p>}
+            {groups.map(g => (
+              <div key={g.label} className="mb-2 last:mb-0">
+                <div className="text-[14px] font-bold">{g.label}{g.note && <span className="font-semibold text-[#6B6382]"> · {g.note}</span>}</div>
+                <div className="flex flex-wrap gap-2 mt-1.5">
+                  {g.foods.map(f => <button key={f.id} onClick={() => addFood(slot.day, slot.meal, f.id)} className="h-10 px-3 rounded-full bg-white text-[15px] font-semibold shadow-sm active:scale-95 transition-transform">{f.emoji} {f.name} +</button>)}
+                </div>
+              </div>))}
+          </div>
+        ) : <p className="text-[15px] mb-3">🎉 Tutti i pasti della settimana sono pianificati!</p>}
+        <ul className="space-y-2 text-[15px]">
+          {missing.map(c => <li key={c.id} className="rounded-2xl bg-[#FFF8DC] px-3 py-2">🟡 <b>{c.name}</b>: mancano {c.min - (counts.cat[c.id] || 0)} porzioni per il minimo settimanale.</li>)}
+          {full.map(c => <li key={c.id} className="rounded-2xl bg-[#FFF0F1] px-3 py-2">🔴 <b>{c.name}</b>: limite raggiunto, evita fino alla prossima settimana.</li>)}
+          {missing.length === 0 && full.length === 0 && <li className="rounded-2xl bg-[#E9F8EF] px-3 py-2">🟢 Tutto in equilibrio, ottimo lavoro!</li>}
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Tab Spesa ---------- */
+function ShopTab({ s, counts, mut, toast }) {
+  const [txt, setTxt] = useState('');
+  const items = s.foods.filter(f => counts.food[f.id]).map(f => ({ ...f, n: counts.food[f.id] }));
+  const groups = s.cats.map(c => ({ c, list: items.filter(i => i.cat === c.id) })).filter(g => g.list.length);
+  const toggle = id => mut(n => { n.shop.checked[id] = !n.shop.checked[id]; });
+  const toggleExtra = id => mut(n => { const e = n.shop.extra.find(x => x.id === id); if (e) e.done = !e.done; });
+  const addExtra = () => { const t = txt.trim(); if (!t) return; mut(n => { n.shop.extra.push({ id: uid(), name: t, done: false }); }); setTxt(''); };
+  const text = () => {
+    const l = ['🛒 Lista della spesa'];
+    groups.forEach(g => { l.push('', `${g.c.emoji} ${g.c.name}`); g.list.forEach(i => l.push(`${s.shop.checked[i.id] ? '☑' : '☐'} ${i.name} (${i.n} porzioni)`)); });
+    if (s.shop.extra.length) { l.push('', '➕ Altro'); s.shop.extra.forEach(e => l.push(`${e.done ? '☑' : '☐'} ${e.name}`)); }
+    return l.join('\n');
+  };
+  const share = async () => {
+    const t = text();
+    try { if (navigator.share) { await navigator.share({ text: t }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    try { await navigator.clipboard.writeText(t); toast('📋 Lista copiata'); } catch (e) { toast('Copia non disponibile'); }
+  };
+  const Row = ({ done, onClick, name, sub }) => (
+    <button onClick={onClick} className="w-full flex items-center gap-3 h-12 rounded-2xl px-3 text-left active:scale-[.98] transition-transform" style={{ background: done ? '#F1F8F3' : '#F9F6FD' }}>
+      <span className={`w-7 h-7 rounded-full flex items-center justify-center border-2 ${done ? 'bg-[#4CC38A] border-[#4CC38A] text-white' : 'border-[#CFC7E0] text-transparent'}`}><Icon n="check" size={16} sw={3} /></span>
+      <span className={`flex-1 font-semibold text-[16px] ${done ? 'line-through text-[#9AA5A0]' : ''}`}>{name}</span>
+      {sub && <span className="text-[13px] font-bold text-[#8A7FA3]">{sub}</span>}
+    </button>
+  );
+  return (
+    <div className="px-4 space-y-3 pb-2">
+      <div className="flex gap-2">
+        <Btn className="flex-1 !h-11 !text-[15px]" onClick={share}><span className="inline-flex items-center gap-2"><Icon n="share" size={18} /> Condividi</span></Btn>
+        <Btn kind="soft" className="!h-11 !text-[15px]" onClick={() => mut(n => { n.shop.checked = {}; n.shop.extra.forEach(e => { e.done = false; }); })}><Icon n="rotate" size={18} /></Btn>
+      </div>
+      {groups.length === 0 && <div className="bg-white rounded-3xl p-8 text-center shadow-sm"><div className="text-5xl mb-2">🛒</div><p className="font-semibold text-[#6B6382]">Pianifica qualche pasto: la lista si crea da sola.</p></div>}
+      {groups.map(g => (
+        <div key={g.c.id} className="bg-white rounded-3xl p-4 shadow-sm">
+          <h3 className="font-extrabold text-[17px] mb-2">{g.c.emoji} {g.c.name}</h3>
+          <div className="space-y-1.5">{g.list.map(i => <Row key={i.id} done={!!s.shop.checked[i.id]} onClick={() => toggle(i.id)} name={`${i.emoji} ${i.name}`} sub={`×${i.n}`} />)}</div>
+        </div>))}
+      <div className="bg-white rounded-3xl p-4 shadow-sm">
+        <h3 className="font-extrabold text-[17px] mb-2">➕ Altro</h3>
+        <div className="space-y-1.5 mb-2">
+          {s.shop.extra.map(e => (
+            <div key={e.id} className="flex items-center gap-1.5">
+              <div className="flex-1"><Row done={e.done} onClick={() => toggleExtra(e.id)} name={e.name} /></div>
+              <button onClick={() => mut(n => { n.shop.extra = n.shop.extra.filter(x => x.id !== e.id); })} className="w-10 h-10 rounded-full text-[#B3263A] flex items-center justify-center active:scale-90 transition-transform"><Icon n="x" size={18} /></button>
+            </div>))}
+        </div>
+        <div className="flex gap-2">
+          <input value={txt} onChange={e => setTxt(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') addExtra(); }} placeholder="Aggiungi voce…" className={inputCls} />
+          <Btn onClick={addExtra} className="!px-4"><Icon n="plus" size={22} /></Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- Tab Frigo ---------- */
+function FridgeTab({ s, counts, onArchive, toast, setConfirm, importData, resetAll, viewHistory, delHistory }) {
+  const nameOf = id => { const f = s.foods.find(x => x.id === id); return f ? `${f.emoji} ${f.name}` : '?'; };
+  const title = `Menu settimana dal ${fmtDate(s.weekStart)}`;
+  const share = async () => {
+    const t = weekText(s.week, nameOf, '🍽️ ' + title);
+    try { if (navigator.share) { await navigator.share({ text: t }); return; } } catch (e) { if (e && e.name === 'AbortError') return; }
+    try { await navigator.clipboard.writeText(t); toast('📋 Menu copiato'); } catch (e) { toast('Copia non disponibile'); }
+  };
+  const exportData = () => {
+    try {
+      const blob = new Blob([JSON.stringify(s, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'piccolo-menu-backup.json';
+      document.body.appendChild(a); a.click(); a.remove();
+    } catch (e) { toast('Esportazione non riuscita'); }
+  };
+  const fileRef = useRef(null);
+  const onFile = e => {
+    const f = e.target.files && e.target.files[0]; if (!f) return;
+    const r = new FileReader();
+    r.onload = () => { try { importData(JSON.parse(r.result)); } catch (er) { toast('File non valido'); } };
+    r.readAsText(f); e.target.value = '';
+  };
+  const limited = s.cats.filter(c => c.max || c.min);
+  return (
+    <div className="px-4 space-y-3 pb-2">
+      <div className="flex gap-2 no-print">
+        <Btn className="flex-1 !h-11 !text-[15px]" onClick={() => window.print()}><span className="inline-flex items-center gap-2"><Icon n="printer" size={18} /> Stampa</span></Btn>
+        <Btn kind="soft" className="flex-1 !h-11 !text-[15px]" onClick={share}><span className="inline-flex items-center gap-2"><Icon n="share" size={18} /> Condividi</span></Btn>
+      </div>
+
+      <div id="printable" className="space-y-3">
+        <div className="bg-white rounded-3xl p-4 shadow-sm print-card text-center">
+          <div className="text-3xl">🍽️</div>
+          <h2 className="font-extrabold text-[20px]">Menu della settimana</h2>
+          <p className="text-[14px] font-semibold text-[#8A7FA3]">dal {fmtDate(s.weekStart)}</p>
+        </div>
+        {DAYS.map(d => (
+          <div key={d.k} className="bg-white rounded-3xl p-4 shadow-sm print-card">
+            <h3 className="font-extrabold text-[17px] mb-2 text-[#5A49D6]">{d.full}</h3>
+            <div className="space-y-1.5">
+              {MEALS.map(m => { const items = s.week[d.k][m.k] || []; return (
+                <div key={m.k} className="flex gap-2 text-[15px]">
+                  <span className="w-[104px] shrink-0 font-bold">{m.e} {m.l}</span>
+                  <span className={items.length ? 'font-medium' : 'text-[#B8AED0]'}>{items.length ? items.map(nameOf).join(', ') : '—'}</span>
+                </div>); })}
+            </div>
+          </div>))}
+        {limited.length > 0 && (
+          <div className="bg-white rounded-3xl p-4 shadow-sm print-card">
+            <h3 className="font-extrabold text-[17px] mb-2">Porzioni settimanali</h3>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[14px]">
+              {limited.map(c => <div key={c.id} className="flex justify-between"><span>{c.emoji} {c.name}</span><b>{counts.cat[c.id] || 0}{c.max ? '/' + c.max : ''}</b></div>)}
+            </div>
+          </div>)}
+      </div>
+
+      <div className="no-print space-y-3">
+        <Btn kind="danger" className="w-full" onClick={onArchive}><span className="inline-flex items-center gap-2"><Icon n="archive" size={20} /> Archivia e inizia nuova settimana</span></Btn>
+
+        <div className="bg-white rounded-3xl p-4 shadow-sm">
+          <h3 className="font-extrabold text-[17px] mb-2">🗂️ Archivio</h3>
+          {s.history.length === 0 && <p className="text-[14px] text-[#A59BBE]">Nessuna settimana archiviata.</p>}
+          <div className="space-y-1.5">
+            {s.history.map(h => (
+              <div key={h.id} className="flex items-center gap-1.5">
+                <button onClick={() => viewHistory(h)} className="flex-1 flex items-center justify-between h-12 rounded-2xl bg-[#F9F6FD] px-4 active:scale-[.98] transition-transform">
+                  <span className="font-semibold">Settimana dal {fmtDate(h.start)}</span><Icon n="chevR" size={18} />
+                </button>
+                <button onClick={() => delHistory(h.id)} className="w-10 h-10 rounded-full text-[#B3263A] flex items-center justify-center active:scale-90 transition-transform"><Icon n="trash" size={18} /></button>
+              </div>))}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl p-4 shadow-sm">
+          <h3 className="font-extrabold text-[17px] mb-2">💾 Dati</h3>
+          <p className="text-[13px] text-[#8A7FA3] mb-3">Salvataggio automatico su questo dispositivo. Esporta un backup per non perdere nulla.</p>
+          <div className="flex gap-2 mb-2">
+            <Btn kind="soft" className="flex-1 !h-11 !text-[15px]" onClick={exportData}><span className="inline-flex items-center gap-2"><Icon n="download" size={18} /> Esporta</span></Btn>
+            <Btn kind="soft" className="flex-1 !h-11 !text-[15px]" onClick={() => fileRef.current && fileRef.current.click()}><span className="inline-flex items-center gap-2"><Icon n="upload" size={18} /> Importa</span></Btn>
+            <input ref={fileRef} type="file" accept="application/json,.json" className="hidden" onChange={onFile} />
+          </div>
+          <Btn kind="ghost" className="w-full !h-11 !text-[15px]" onClick={() => setConfirm({ title: 'Ripristinare tutto?', msg: 'Verranno cancellati menu, limiti, archivio e alimenti personalizzati.', label: 'Ripristina', onYes: resetAll })}>Ripristina dati iniziali</Btn>
+        </div>
+        <p className="text-center text-[12px] text-[#A59BBE] pb-2">Piccolo Menù · v{APP_VERSION}</p>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- App ---------- */
+const TABS = [
+  { k: 'menu', l: 'Menu', i: 'utensils', t: 'Piccolo Menù' },
+  { k: 'limiti', l: 'Limiti', i: 'shield', t: 'Limiti e alimenti' },
+  { k: 'stats', l: 'Stats', i: 'chart', t: 'Statistiche' },
+  { k: 'spesa', l: 'Spesa', i: 'cart', t: 'Lista della spesa' },
+  { k: 'frigo', l: 'Frigo', i: 'calendar', t: 'Vista frigo' },
+];
+
+function App() {
+  const [s, setS] = useState(load);
+  const [tab, setTab] = useState('menu');
+  const [day, setDay] = useState(DAYS[(new Date().getDay() + 6) % 7].k);
+  const [quickMeal, setQuickMeal] = useState(() => { const h = new Date().getHours(); return h < 9 ? 'colazione' : h < 11 ? 'spuntino' : h < 15 ? 'pranzo' : h < 18 ? 'merenda' : 'cena'; });
+  const [picker, setPicker] = useState(null);
+  const [foodEd, setFoodEd] = useState(null);
+  const [catEd, setCatEd] = useState(null);
+  const [confirm, setConfirm] = useState(null);
+  const [histView, setHistView] = useState(null);
+  const [toastMsg, setToastMsg] = useState('');
+  const timer = useRef(null);
+  const scrollRef = useRef(null);
+
+  useEffect(() => { try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) {} }, [s]);
+  useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = 0; }, [tab]);
+
+  const counts = useMemo(() => computeCounts(s), [s]);
+  const mut = fn => setS(prev => { const n = JSON.parse(JSON.stringify(prev)); fn(n); return n; });
+  const toast = m => { setToastMsg(m); clearTimeout(timer.current); timer.current = setTimeout(() => setToastMsg(''), 2400); };
+
+  const addFood = (d, m, id) => {
+    const f = s.foods.find(x => x.id === id); if (!f) return;
+    const fc = (counts.food[id] || 0) + 1, fl = s.foodLimits[id];
+    const cat = s.cats.find(c => c.id === f.cat), cc = (counts.cat[f.cat] || 0) + 1;
+    let msg = `${f.emoji} ${f.name} aggiunto`;
+    if (fl && fc > fl) msg = `⚠️ ${f.name}: limite superato (${fc}/${fl})`;
+    else if (cat && cat.max && cc > cat.max) msg = `⚠️ ${cat.name}: limite superato (${cc}/${cat.max})`;
+    else if (fl && fc === fl) msg = `🔴 ${f.name}: limite raggiunto (${fc}/${fl})`;
+    else if (cat && cat.max && cc === cat.max) msg = `🔴 ${cat.name}: limite raggiunto (${cc}/${cat.max})`;
+    else if (fl && fc === fl - 1 && fl >= 2) msg = `🟡 ${f.name}: ${fc}/${fl}, quasi al limite`;
+    mut(n => { n.week[d][m].push(id); });
+    toast(msg);
+  };
+  const removeFood = (d, m, i) => mut(n => { n.week[d][m].splice(i, 1); });
+  const clearDay = d => {
+    if (!MEALS.some(m => (s.week[d][m.k] || []).length)) { toast('Giorno già vuoto'); return; }
+    setConfirm({ title: 'Svuotare il giorno?', msg: 'Tutti i pasti di ' + DAYS.find(x => x.k === d).full + ' verranno rimossi.', label: 'Svuota', onYes: () => mut(n => { MEALS.forEach(m => { n.week[d][m.k] = []; }); }) });
+  };
+
+  const saveFood = f => {
+    const id = f.id || uid();
+    mut(n => {
+      const obj = { id, name: f.name, cat: f.cat, emoji: f.emoji || '🍽️', quick: !!f.quick };
+      const i = n.foods.findIndex(x => x.id === id);
+      if (i >= 0) n.foods[i] = obj; else n.foods.push(obj);
+      if (f.max > 0) n.foodLimits[id] = f.max; else delete n.foodLimits[id];
+      if (f.addTo) n.week[f.addTo.day][f.addTo.meal].push(id);
+    });
+    setFoodEd(null);
+  };
+  const deleteFood = id => {
+    const f = s.foods.find(x => x.id === id);
+    setConfirm({ title: 'Eliminare alimento?', msg: `«${f ? f.name : ''}» verrà rimosso anche dal menu.`, label: 'Elimina', onYes: () => {
+      mut(n => {
+        n.foods = n.foods.filter(x => x.id !== id); delete n.foodLimits[id]; delete n.shop.checked[id];
+        DAYS.forEach(d => MEALS.forEach(m => { n.week[d.k][m.k] = n.week[d.k][m.k].filter(x => x !== id); }));
+      });
+      setFoodEd(null);
+    } });
+  };
+  const toggleQuick = id => mut(n => { const f = n.foods.find(x => x.id === id); if (f) f.quick = !f.quick; });
+  const saveCat = c => {
+    mut(n => { const id = c.id || uid(); const obj = { id, name: c.name, emoji: c.emoji || '🍽️', max: c.max || 0, min: c.min || 0, protein: !!c.protein };
+      const i = n.cats.findIndex(x => x.id === id); if (i >= 0) n.cats[i] = obj; else n.cats.push(obj); });
+    setCatEd(null);
+  };
+  const deleteCat = id => {
+    if (s.cats.length <= 1) { toast('Serve almeno una categoria'); return; }
+    setConfirm({ title: 'Eliminare categoria?', msg: 'Gli alimenti verranno spostati nella prima categoria rimasta.', label: 'Elimina', onYes: () => {
+      mut(n => { n.cats = n.cats.filter(c => c.id !== id); const t = n.cats[0].id; n.foods.forEach(f => { if (f.cat === id) f.cat = t; }); });
+      setCatEd(null);
+    } });
+  };
+
+  const archive = () => {
+    if (!Object.keys(counts.food).length) { toast('La settimana è vuota'); return; }
+    setConfirm({ title: 'Archiviare la settimana?', msg: 'Il menu attuale va nell’archivio e parte una nuova settimana vuota. Limiti e alimenti restano.', label: 'Archivia', onYes: () => {
+      mut(n => {
+        const names = {}; n.foods.forEach(f => { names[f.id] = `${f.emoji} ${f.name}`; });
+        n.history.unshift({ id: uid(), start: n.weekStart, archivedAt: new Date().toISOString(), week: n.week, names });
+        n.history = n.history.slice(0, 26);
+        n.week = emptyWeek(); n.weekStart = mondayOf(new Date()).toISOString(); n.shop = { checked: {}, extra: [] };
+      });
+      toast('📦 Settimana archiviata');
+    } });
+  };
+  const importData = d => {
+    if (!d || !d.foods || !d.cats || !d.week) { toast('File non valido'); return; }
+    setS({ ...defaults(), ...d }); toast('✅ Backup importato');
+  };
+  const resetAll = () => { setS(defaults()); toast('Dati ripristinati'); };
+
+  const cur = TABS.find(t => t.k === tab);
+  const weekLabel = `Settimana dal ${fmtDate(s.weekStart)}`;
+
+  return (
+    <>
+      <header className="no-print shrink-0 px-5 pb-2 flex items-center justify-between" style={{ paddingTop: 'calc(env(safe-area-inset-top) + 10px)' }}>
+        <div>
+          <h1 className="text-[28px] leading-8 font-extrabold tracking-tight">{cur.t}</h1>
+          <p className="text-[13px] font-semibold text-[#8A7FA3]">{weekLabel}</p>
+        </div>
+        <button onClick={archive} className="w-11 h-11 rounded-full bg-white shadow-sm text-[#5A49D6] flex items-center justify-center active:scale-90 transition-transform" aria-label="Archivia settimana"><Icon n="archive" size={22} /></button>
+      </header>
+
+      <main ref={scrollRef} className="scroll flex-1 pt-2" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 96px)' }}>
+        {tab === 'menu' && <MenuTab s={s} counts={counts} day={day} setDay={setDay} quickMeal={quickMeal} setQuickMeal={setQuickMeal} addFood={addFood} removeFood={removeFood} openPicker={(d, m) => setPicker({ day: d, meal: m })} clearDay={clearDay} />}
+        {tab === 'limiti' && <LimitsTab s={s} counts={counts} editFood={setFoodEd} editCat={setCatEd} toggleQuick={toggleQuick} />}
+        {tab === 'stats' && <StatsTab s={s} counts={counts} addFood={addFood} />}
+        {tab === 'spesa' && <ShopTab s={s} counts={counts} mut={mut} toast={toast} />}
+        {tab === 'frigo' && <FridgeTab s={s} counts={counts} onArchive={archive} toast={toast} setConfirm={setConfirm} importData={importData} resetAll={resetAll} viewHistory={setHistView} delHistory={id => setConfirm({ title: 'Eliminare dall’archivio?', msg: 'L’operazione non si può annullare.', label: 'Elimina', onYes: () => mut(n => { n.history = n.history.filter(h => h.id !== id); }) })} />}
+      </main>
+
+      <nav className="no-print fixed bottom-0 inset-x-0 z-40 border-t border-[#EDE6F7]" style={{ background: 'rgba(255,255,255,.92)', backdropFilter: 'blur(18px)', WebkitBackdropFilter: 'blur(18px)', paddingBottom: 'env(safe-area-inset-bottom)' }}>
+        <div className="flex">
+          {TABS.map(t => (
+            <button key={t.k} onClick={() => setTab(t.k)} className={`flex-1 h-[62px] flex flex-col items-center justify-center gap-0.5 active:scale-95 transition-transform ${tab === t.k ? 'text-[#7C6BF2]' : 'text-[#A59BBE]'}`}>
+              <span className={`px-4 py-1 rounded-full transition-colors ${tab === t.k ? 'bg-[#EFEAFF]' : ''}`}><Icon n={t.i} size={22} sw={tab === t.k ? 2.4 : 2} /></span>
+              <span className="text-[11px] font-bold">{t.l}</span>
+            </button>))}
+        </div>
+      </nav>
+
+      {toastMsg && <div className="toast no-print fixed left-1/2 z-[60] max-w-[90%] px-4 py-3 rounded-2xl text-[15px] font-semibold text-white text-center shadow-lg" style={{ bottom: 'calc(env(safe-area-inset-bottom) + 82px)', background: 'rgba(59,51,80,.95)' }}>{toastMsg}</div>}
+
+      {picker && <FoodPicker s={s} counts={counts} day={picker.day} meal={picker.meal} onAdd={addFood} onRemove={removeFood} onClose={() => setPicker(null)}
+        onCreate={(name, cat) => setFoodEd({ name, cat, emoji: '🍽️', quick: false, max: 0, addTo: { day: picker.day, meal: picker.meal } })} />}
+      {foodEd && <EditFood s={s} food={foodEd} onSave={saveFood} onDelete={deleteFood} onClose={() => setFoodEd(null)} />}
+      {catEd && <EditCat cat={catEd} onSave={saveCat} onDelete={deleteCat} onClose={() => setCatEd(null)} />}
+      {histView && (
+        <Sheet title={`Settimana dal ${fmtDate(histView.start)}`} onClose={() => setHistView(null)}
+          footer={<Btn kind="soft" className="w-full" onClick={() => { const h = histView; setHistView(null); setConfirm({ title: 'Ripristinare questa settimana?', msg: 'Sostituirà il menu attuale.', label: 'Ripristina', onYes: () => mut(n => { n.week = JSON.parse(JSON.stringify(h.week)); n.weekStart = h.start; }) }); }}>Ripristina come settimana corrente</Btn>}>
+          <pre className="whitespace-pre-wrap text-[14px] leading-6 font-sans pb-2">{weekText(histView.week, id => histView.names[id] || '?', 'Menu archiviato')}</pre>
+        </Sheet>
+      )}
+      {confirm && (
+        <Sheet title={confirm.title} onClose={() => setConfirm(null)}
+          footer={<div className="flex gap-2"><Btn kind="ghost" className="flex-1" onClick={() => setConfirm(null)}>Annulla</Btn><Btn className="flex-1" onClick={() => { const c = confirm; setConfirm(null); c.onYes(); }}>{confirm.label}</Btn></div>}>
+          <p className="text-[16px] text-[#6B6382] pb-2">{confirm.msg}</p>
+        </Sheet>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
