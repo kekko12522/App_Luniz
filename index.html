@@ -32,7 +32,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid 
 h1,h2,h3{font-family:var(--ff-h);font-weight:600;margin:0}
 header{position:sticky;top:0;z-index:10;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 10px;background:linear-gradient(160deg,#E4DBFF,#D5ECFB 60%,#D9F3E8)}
 .top{display:flex;align-items:center;gap:10px}
-.top h1{flex:1;font-size:26px;display:flex;gap:10px;align-items:center}
+.top h1{flex:1;min-width:0;font-size:24px;display:flex;flex-wrap:wrap;gap:2px 8px;align-items:center}
 #logo{width:34px;height:34px;border-radius:10px}
 .pill{padding:7px 14px;border-radius:999px;background:rgba(255,255,255,.65);font-weight:700;font-size:14px}
 .wk{display:flex;align-items:center;gap:8px;margin-top:8px}
@@ -114,8 +114,8 @@ li.it.eaten .nm .t{text-decoration:line-through;color:var(--soft)}
 .empty i{display:block;font-size:30px;color:var(--lilla);margin-bottom:6px}
 .wrow{width:100%;text-align:left;display:block}
 nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 12px);width:min(96vw,540px);display:flex;background:#fff;border-radius:26px;padding:6px;box-shadow:0 6px 28px rgba(80,60,160,.22);z-index:20}
-nav button{flex:1;padding:8px 2px;border-radius:20px;font-size:11.5px;font-weight:700;color:var(--soft);display:flex;flex-direction:column;gap:2px;align-items:center}
-nav button i{font-size:18px}
+nav button{flex:1;padding:8px 0;border-radius:20px;font-size:10.5px;font-weight:700;color:var(--soft);display:flex;flex-direction:column;gap:2px;align-items:center}
+nav button i{font-size:17px}
 nav button.on{background:var(--lilla);color:#fff}
 dialog{border:0;border-radius:24px;padding:20px;width:min(92vw,420px);max-height:88vh;overflow-y:auto;color:var(--ink);box-shadow:0 12px 50px rgba(40,30,90,.35)}
 dialog::backdrop{background:rgba(59,54,89,.4)}
@@ -145,12 +145,56 @@ dialog input[type=text],dialog input[type=number]{display:block;width:100%;margi
 #toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 92px);transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 16px;border-radius:14px;font-weight:700;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:30;max-width:88vw;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+.age{font:700 12.5px var(--ff-b);background:rgba(255,255,255,.72);border-radius:999px;padding:3px 10px;color:var(--lilla-d);white-space:nowrap}
+.chip.over{background:#FAC9C6;color:#9B2B22}
+.dh{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:4px 2px 10px}
+.dh .dtitle{margin:0}
+.sm{padding:8px 12px;font-size:14px;display:flex;gap:6px;align-items:center;white-space:nowrap}
+.likes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.lk{display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 2px;border-radius:14px;background:var(--bg);border:2px solid var(--line);font-size:11.5px;font-weight:700;color:var(--soft)}
+.lk span{font-size:18px;filter:grayscale(1);opacity:.55}
+.lk.on{color:var(--ink)}.lk.on span{filter:none;opacity:1}
+.lk.on.top{background:#FFF3C4;border-color:#F5CF5B}.lk.on.ok{background:#E2F6EC;border-color:#8FD5B4}.lk.on.no{background:#FDE0DF;border-color:#E9A09C}
+.reactadd{margin-top:8px;width:100%;padding:8px;border-radius:14px;color:var(--soft);font-weight:700;font-size:13px;border:2px dashed var(--line)}
+.reactrow{margin-top:8px;width:100%;display:flex;gap:8px;align-items:flex-start;text-align:left;padding:9px 12px;border-radius:14px;background:#FDE0DF;color:#9B2B22;font-size:13.5px;font-weight:600}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px}
+.seg button{padding:8px 4px;border-radius:14px;background:var(--bg);font-weight:700;font-size:13px;border:2px solid var(--line)}
+.seg button.on{background:var(--lilla);border-color:var(--lilla);color:#fff}
+.th{font-size:18px;display:flex;gap:8px;align-items:center;margin-bottom:6px}.th i{color:var(--lilla-d)}
+.tl{list-style:disc;padding-left:20px;margin:0;font-size:14.5px}.tl li{margin:5px 0}
+.ph,.pr{display:grid;grid-template-columns:1.2fr 1fr 1fr;align-items:center;gap:6px;padding:7px 0;font-size:14px}
+.ph{font-size:12px;color:var(--soft);font-weight:700;border-bottom:2px solid var(--line)}
+.pr{border-bottom:1px dashed var(--line)}
+.ph span:last-child{text-align:right}
+.pv{justify-self:end;min-width:34px;text-align:center;padding:2px 10px;border-radius:999px;font-weight:700}
+.pv.low{background:var(--line);color:var(--soft)}.pv.ok{background:#E2F6EC;color:#2F8F66}.pv.high{background:#FFEBD2;color:#B96A12}
+.ta,dialog textarea{display:block;width:100%;margin-top:6px;padding:11px 12px;border-radius:14px;border:2px solid var(--line);font:inherit;font-size:16px;color:var(--ink);background:#fff;resize:vertical}
+textarea:focus-visible{outline:3px solid var(--lilla-d);outline-offset:2px}
+.reg{border-top:1px dashed var(--line);padding:10px 0}
+.regh{display:flex;gap:8px;align-items:center}.regh b{flex:1}.regh span{font-size:13px;color:var(--soft);font-weight:700}
+.regd{font-size:14px;margin-top:2px}
+#printArea{display:none}
+@page{size:A4 landscape;margin:10mm}
+@media print{
+  html,body{background:#fff!important;padding:0!important}
+  header,main,nav,#toast,dialog{display:none!important}
+  #printArea{display:block;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  #printArea h1{font-size:20px;text-align:center;margin:0 0 8px;color:#3B3659}
+  #printArea table{width:100%;border-collapse:collapse;table-layout:fixed;page-break-inside:avoid}
+  #printArea th,#printArea td{border:1.5px solid #CFC6EE;padding:4px 7px;vertical-align:top;font-size:11.5px;text-align:left}
+  #printArea thead th{background:#E4DBFF;text-align:center;font-size:13px}
+  #printArea tbody th{background:#F1EDFF;width:13%;font-size:13px}
+  #printArea tbody th small{display:block;font-weight:600;color:#7C7799;font-size:10.5px}
+  #printArea tbody tr{height:21mm}
+  #printArea td div{margin-bottom:2px}
+}
 </style>
 </head>
 <body>
 <header>
   <div class="top">
-    <h1><img id="logo" alt="" width="34" height="34"> Menu Luniss</h1>
+    <h1><img id="logo" alt="" width="34" height="34"><span>Menu Luniss</span><span class="age" id="age"></span></h1>
     <button class="pill" data-act="today"><i class="fa-solid fa-calendar-day"></i> Oggi</button>
   </div>
   <div class="wk">
@@ -164,15 +208,17 @@ dialog input[type=text],dialog input[type=number]{display:block;width:100%;margi
   <button data-tab="menu"><i class="fa-solid fa-calendar-week"></i>Menu</button>
   <button data-tab="types"><i class="fa-solid fa-tags"></i>Tipi</button>
   <button data-tab="limits"><i class="fa-solid fa-gauge-high"></i>Limiti</button>
-  <button data-tab="stats"><i class="fa-solid fa-chart-pie"></i>Statistiche</button>
+  <button data-tab="stats"><i class="fa-solid fa-chart-pie"></i>Grafici</button>
+  <button data-tab="tips"><i class="fa-solid fa-lightbulb"></i>Consigli</button>
   <button data-tab="more"><i class="fa-solid fa-gear"></i>Altro</button>
 </nav>
 <input type="file" id="file" accept="application/json,.json" hidden>
 <dialog id="dlg"></dialog>
 <div id="toast" role="status"></div>
+<div id="printArea" aria-hidden="true"></div>
 
 <script>
-const KEYS=['menuLuniss.v4','menuLuniss.v3','menuLuniss.v2','menuBimba.v1'], KEY=KEYS[0];
+const KEYS=['menuLuniss.v5','menuLuniss.v4','menuLuniss.v3','menuLuniss.v2','menuBimba.v1'], KEY=KEYS[0];
 const DAYS=['Lunedì','Martedì','Mercoledì','Giovedì','Venerdì','Sabato','Domenica'];
 const SHORT=['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
 const MEALS=[
@@ -209,6 +255,93 @@ const rangeOf=s=>{const a=parse(s);return fmt(a)+' – '+fmt(addDays(a,6))};
 const ink=h=>{const n=parseInt(h.slice(1),16),r=n>>16,g=n>>8&255,b=n&255;return (r*299+g*587+b*114)/1000>150?'#3B3659':'#ffffff'};
 const MKEY=/^[0-6]-(colazione|spuntino|pranzo|merenda|cena)$/;
 const HEX=/^#[0-9a-f]{6}$/i;
+const BIRTH='2026-03-21';
+const LIKES=['top','ok','no'];
+const REACTS={rossore:'Rossore/Sfogo',pancia:'Mal di pancia',vomito:'Vomito',altro:'Altro'};
+let locked=false,pedT=null,tipBand=null;
+function cleanReact(r){
+  if(!r||!Array.isArray(r.types))return null;
+  const t=[...new Set(r.types.map(String))].filter(x=>REACTS[x]);
+  return t.length?{types:t,note:String(r.note||'').slice(0,300)}:null;
+}
+const PROT=[
+  {n:'Legumi',min:4,max:5,types:['legumi']},
+  {n:'Pesce',min:3,max:4,types:['pesce']},
+  {n:'Carne',min:2,max:3,types:['carne_bianca','carne_rossa']},
+  {n:'Uova',min:1,max:2,types:['uova']},
+  {n:'Formaggi',min:1,max:2,types:['formaggi']}
+];
+const TIPS={
+a:{tab:'6–8 mesi',sections:[
+ {t:'Come iniziare',i:'fa-seedling',l:[
+  "Il latte (materno o artificiale) resta l'alimento principale: i pasti solidi partono da 1 al giorno e salgono piano piano a 2–3.",
+  "Un alimento nuovo alla volta, riproposto anche più volte: i primi rifiuti sono normali e non vanno letti come un \"non mi piace\".",
+  "Non c'è un ordine obbligato (verdura, frutta, cereali, carne, pesce, legumi). Anche gli alimenti allergizzanti, come uovo e pesce, non vanno ritardati senza un motivo indicato dal pediatra: si introducono uno alla volta, ben cotti."]},
+ {t:'La pappa base',i:'fa-bowl-food',l:[
+  "Schema: 1 cereale (crema di riso, semolino, pastina piccola) + 1 verdura cotta + 1 fonte proteica (carne bianca, pesce, legumi decorticati, uovo sodo, ricotta) + 1 cucchiaino di olio extravergine a crudo.",
+  "Cuoci in brodo vegetale senza sale.",
+  "Carne, legumi e tuorlo sono buone fonti di ferro, utile da questa età.",
+  "Frutta grattugiata, frullata o schiacciata (mela, pera, banana) come spuntino o a fine pasto, senza zucchero."]},
+ {t:'Consistenza e taglio sicuro',i:'fa-utensils',l:[
+  "Parti da creme, vellutate e purè lisci, poi passa a consistenze più granulose man mano che le accetta.",
+  "Carne e pesce cotti, senza pelle, ossa e lische, e ben frullati o sminuzzati.",
+  "Legumi decorticati e passati; verdure cotte fino a essere morbide.",
+  "Con l'autosvezzamento offri strisce o bastoncini morbidi, abbastanza grossi da afferrare, sempre con lei seduta e sotto controllo."]},
+ {t:'Idee di pappe e spuntini',i:'fa-lightbulb',l:[
+  "Crema di riso con zucca e tacchino frullato",
+  "Vellutata di zucchine e patate con merluzzo",
+  "Semolino con carote e lenticchie decorticate passate",
+  "Pastina con passato di verdure e ricotta",
+  "Pappa di patate e broccoletti con uovo sodo schiacciato",
+  "Spuntino: mela o pera grattugiata, banana schiacciata"]},
+ {t:'Acqua e cose da evitare',i:'fa-droplet',l:[
+  "Acqua a piccoli sorsi a ogni pasto, con bicchierino o tazza; niente succhi né bevande zuccherate.",
+  "Niente sale aggiunto, zucchero o miele (il miele è da evitare sotto i 12 mesi).",
+  "Niente latte vaccino come bevanda prima dei 12 mesi; niente uova, carne o pesce crudi o poco cotti.",
+  "Pesce: meglio specie piccole e a basso contenuto di mercurio; evita pesce spada, verdesca e tonno fresco.",
+  "Mai cibi duri o tondi interi: frutta secca, uva, pop-corn."]}
+]},
+b:{tab:'9–12 mesi',sections:[
+ {t:'Dalla crema ai pezzetti',i:'fa-utensils',l:[
+  "Passa gradualmente dalle creme a pezzetti morbidi, che si schiacciano tra due dita: si impara a masticare anche senza molti dentini.",
+  "Pasta corta ben cotta, verdure a ditali, frutta matura a pezzetti, carne e pesce sfaldati.",
+  "Lascia che provi da sola con mani e cucchiaio: sporcarsi fa parte dell'apprendimento."]},
+ {t:'Finger food e presa a pinza',i:'fa-hand',l:[
+  "Cubetti ben cotti di zucchina, carota o patata dolce; pezzetti di banana o pera matura; pastina e pasta corta.",
+  "Polpettine tenere di legumi, carne o pesce cotte al forno; strisce di frittata ben cotta.",
+  "Pezzetti piccoli e morbidi fanno esercitare la presa a pinza tra pollice e indice."]},
+ {t:'Latte e pasti',i:'fa-clock',l:[
+  "Punta a 3 pasti e 1–2 spuntini: il latte accompagna ancora la giornata ma lascia sempre più spazio ai pasti solidi.",
+  "La riduzione delle poppate o dei biberon va graduale e concordata con il pediatra."]},
+ {t:'Ferro + vitamina C',i:'fa-lemon',l:[
+  "Abbina una fonte di ferro (carne, pesce, legumi, tuorlo) a una di vitamina C (kiwi, arancia, fragole, pomodoro maturo, peperone cotto): la vitamina C aiuta ad assorbire il ferro.",
+  "Esempi: pasta e lenticchie con pomodoro fresco; frittatina con peperone cotto; merluzzo con zucchine e kiwi come frutta."]},
+ {t:'Sicurezza a tavola',i:'fa-shield-heart',l:[
+  "Sempre seduta e sotto sorveglianza mentre mangia.",
+  "Uva e pomodorini tagliati per il lungo, in quarti; mela e carota crude solo grattugiate o cotte.",
+  "Evita frutta secca intera, arachidi, pop-corn, caramelle, salumi e wurstel a rondelle."]}
+]},
+c:{tab:'12+ mesi',sections:[
+ {t:'Piatti unici in famiglia',i:'fa-house',l:[
+  "Pasta o riso con legumi e verdure; pasta al pomodoro con ricotta e verdure; polpette al forno con purè e verdure; pesce al forno con patate e zucchine.",
+  "Struttura del piatto: una fonte di carboidrati, una di proteine, tante verdure e un filo di olio extravergine d'oliva.",
+  "Porzioni piccole, cucina semplice e poco sale (se serve, iodato e in quantità minima); niente fritti pesanti né salse elaborate."]},
+ {t:'Latte e bevande',i:'fa-droplet',l:[
+  "Dopo i 12 mesi il latte vaccino intero può entrare nella dieta, in quantità moderate: i pasti restano la parte principale.",
+  "Il miele è ammesso dopo l'anno.",
+  "Acqua come bevanda principale; niente succhi e bibite zuccherate."]},
+ {t:'Se rifiuta i cibi nuovi (neofobia)',i:'fa-circle-question',l:[
+  "Rifiutare i cibi nuovi è una fase normale, soprattutto nei primi anni, e di solito passa.",
+  "Riproponi lo stesso alimento in modi diversi anche 10–15 volte, in porzioni minuscole, senza forzare né ricattare.",
+  "Non usare i dolci come premio. Mangiate insieme: vederti assaggiare è il consiglio migliore.",
+  "Coinvolgila: lavare la verdura, mescolare, scegliere tra due opzioni."]},
+ {t:'Merende sane',i:'fa-apple-whole',l:[
+  "Frutta fresca a pezzetti, yogurt bianco naturale con frutta, pane con un filo d'olio o con ricotta, un pezzetto di formaggio morbido.",
+  "Evita merendine, biscotti molto zuccherati, succhi e snack salati.",
+  "Frutta secca e semi solo tritati o in crema: interi sono un rischio di soffocamento fino ai 4–5 anni."]}
+]}
+};
+
 
 /* ---------- icona, PNG per Home e manifest ---------- */
 (function(){
@@ -231,7 +364,7 @@ const HEX=/^#[0-9a-f]{6}$/i;
 
 /* ---------- dati ---------- */
 function fresh(){
-  return{cats:DEFCATS.map(c=>({...c})),limits:[{id:uid(),name:'Tacchino',max:4,types:[],words:['tacchino']}],weeks:{},history:[],onlyDone:false};
+  return{cats:DEFCATS.map(c=>({...c})),limits:[{id:uid(),name:'Tacchino',max:4,types:[],words:['tacchino']}],weeks:{},history:[],onlyDone:false,pedNote:''};
 }
 function normalize(o){
   if(!o||typeof o!=='object')throw new Error('formato');
@@ -270,7 +403,7 @@ function normalize(o){
         const cs=Array.isArray(i.cats)?i.cats.map(String):(OLDMAP[i.cat]?[OLDMAP[i.cat]]:[]);
         return{id:String(i.id||uid()),name:String(i.name).slice(0,80),cats:[...new Set(cs)].filter(x=>ids.has(x)),done:!!i.done};
       });
-      meals[mk]={items,done:items.length>0&&!!m.done};
+      meals[mk]={items,done:items.length>0&&!!m.done,like:LIKES.includes(m.like)?m.like:null,react:cleanReact(m.react)};
     });
     const mk=iso(monday(parse(k)));
     out[mk]={meals:Object.assign(out[mk]?out[mk].meals:{},meals)};
@@ -280,7 +413,7 @@ function normalize(o){
     Object.keys(h.byCat).forEach(k=>{const nk=legacy?(OLDMAP[k]||'altro'):k;byCat[nk]=(byCat[nk]||0)+(Number(h.byCat[k])||0)});
     return{id:String(h.id||uid()),start:h.start,total:Number(h.total)||0,meals:Number(h.meals)||0,byCat};
   });
-  return{cats,limits,weeks:out,history,onlyDone:!!o.onlyDone};
+  return{cats,limits,weeks:out,history,onlyDone:!!o.onlyDone,pedNote:typeof o.pedNote==='string'?o.pedNote.slice(0,5000):''};
 }
 function load(){
   for(const k of KEYS){
@@ -290,7 +423,8 @@ function load(){
 }
 let S=load(), tab='menu', day=(new Date().getDay()+6)%7, vs=iso(monday(new Date())), charts=[];
 function save(){
-  Object.keys(S.weeks).forEach(k=>{const w=S.weeks[k];if(!Object.values(w.meals).some(m=>m.items.length||m.done))delete S.weeks[k]});
+  if(locked)return;
+  Object.keys(S.weeks).forEach(k=>{const w=S.weeks[k];if(!Object.values(w.meals).some(m=>m.items.length||m.done||m.like||m.react))delete S.weeks[k]});
   try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){toast('Impossibile salvare i dati')}
 }
 function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),3200)}
@@ -343,7 +477,7 @@ function viewMenu(){
     const dt=addDays(parse(vs),i),done=MEALS.every(m=>getMeal(i,m.k).done);
     return `<button class="dchip ${i===day?'on':''} ${iso(dt)===iso(new Date())?'today':''}" data-act="day" data-i="${i}" aria-label="${DAYS[i]} ${dt.getDate()}"><small>${SHORT[i]}</small>${dt.getDate()}<span class="dot">${done?'<b></b>':''}</span></button>`;
   }).join('')+'</div>';
-  h+=`<h2 class="dtitle">${DAYS[day]} ${fmt(addDays(parse(vs),day))}</h2>`;
+  h+=`<div class="dh"><h2 class="dtitle">${DAYS[day]} ${fmt(addDays(parse(vs),day))}</h2><button class="ghost sm" data-act="print"><i class="fa-solid fa-print"></i> Stampa menu</button></div>`;
   MEALS.forEach(m=>{
     const M=getMeal(day,m.k);
     h+=`<section class="card meal ${M.done?'done':''}">
@@ -356,7 +490,7 @@ function viewMenu(){
           <button class="nm" data-act="edititem" data-m="${m.k}" data-id="${it.id}"><span class="t">${esc(it.name)}</span>${chips?`<span class="chips">${chips}</span>`:''}</button>
           <button class="x" data-act="delitem" data-m="${m.k}" data-id="${it.id}" aria-label="Rimuovi ${esc(it.name)}"><i class="fa-solid fa-xmark"></i></button></li>`;
       }).join('')}</ul>
-      <button class="add" data-act="additem" data-m="${m.k}"><i class="fa-solid fa-plus"></i> Aggiungi piatto</button></section>`;
+      <button class="add" data-act="additem" data-m="${m.k}"><i class="fa-solid fa-plus"></i> Aggiungi piatto</button>${mealFoot(m.k,M)}</section>`;
   });
   return h;
 }
@@ -427,10 +561,10 @@ function viewStats(){
 
 function viewMore(){
   const cw=iso(monday(new Date()));
-  let h=`<div class="card"><h3 style="margin-bottom:10px">Backup dei dati</h3>
+  let h=regCard()+`<div class="card"><h3 style="margin-bottom:10px">Backup dei dati</h3>
     <div class="two"><button class="pri" data-act="export"><i class="fa-solid fa-download"></i> Scarica Dati JSON</button>
     <button class="sec" data-act="import"><i class="fa-solid fa-upload"></i> Carica Dati JSON</button></div>
-    <p class="note">Il file contiene menu di tutte le settimane, tipi, limiti e storico. Caricando un file i dati attuali vengono sostituiti.</p></div>`;
+    <p class="note">Il file contiene menu di tutte le settimane, tipi, limiti, note del pediatra, registro reazioni e storico. Caricando un file i dati attuali vengono sostituiti.</p></div>`;
   h+=`<div class="card"><h3 style="margin-bottom:4px">Settimana ${rangeOf(vs)}</h3>
     <p class="note" style="margin:0 0 10px">Rimuove tutto il menu di questa settimana.</p>
     <button class="danger wide" data-act="clearweek" style="margin:0"><i class="fa-solid fa-eraser"></i> Svuota questa settimana</button></div>`;
@@ -454,8 +588,118 @@ function viewMore(){
   return h;
 }
 
+/* ---------- età, consigli, tracker, stampa ---------- */
+function ageMonths(now=new Date()){
+  const b=parse(BIRTH);
+  let m=(now.getFullYear()-b.getFullYear())*12+now.getMonth()-b.getMonth();
+  if(now.getDate()<b.getDate())m--;
+  return m;
+}
+function ageLabel(){
+  const now=new Date(),m=ageMonths(now);
+  if(m<0)return '';
+  if(m<1){const d=Math.max(0,Math.floor((now-parse(BIRTH))/864e5));return d+(d===1?' Giorno':' Giorni')}
+  if(m<24)return m+(m===1?' Mese':' Mesi');
+  const y=Math.floor(m/12),r=m%12;
+  return y+(y===1?' Anno':' Anni')+(r?` e ${r} ${r===1?'mese':'mesi'}`:'');
+}
+const bandOf=m=>m<9?'a':m<12?'b':'c';
+function typeCount(ids){
+  let n=0;
+  Object.values(curWeek().meals).forEach(M=>M.items.forEach(i=>{
+    if(S.onlyDone&&!i.done)return;
+    if(i.cats.some(c=>ids.includes(c)))n++;
+  }));
+  return n;
+}
+function viewTips(){
+  const m=ageMonths(),cur=bandOf(Math.max(0,m)),b=tipBand||cur;
+  let h=`<div class="card"><div class="fh"><span class="mi" style="background:#FFE3C9"><i class="fa-solid fa-baby"></i></span>
+    <div class="fn"><b>${m>=0?'Luna ha '+ageLabel().toLowerCase():'Consigli per età'}</b><span>Scegli la fascia (• = quella attuale)</span></div></div>
+    <div class="seg">${Object.keys(TIPS).map(k=>`<button class="${k===b?'on':''}" data-act="tipband" data-b="${k}">${TIPS[k].tab}${k===cur?' •':''}</button>`).join('')}</div></div>`;
+  if(m>=0&&m<6)h+=`<div class="alert info"><i class="fa-solid fa-circle-info"></i><span>Prima dei 6 mesi il latte è in genere l'unico alimento necessario: decidi con il pediatra quando iniziare.</span></div>`;
+  TIPS[b].sections.forEach(s=>{
+    h+=`<div class="card"><h3 class="th"><i class="fa-solid ${s.i}"></i> ${s.t}</h3><ul class="tl">${s.l.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  });
+  h+=`<div class="card"><h3 style="margin-bottom:4px">Frequenze proteiche raccomandate</h3>
+    <p class="note" style="margin:0 0 8px">Volte a settimana nella prima infanzia, confrontate con la settimana ${rangeOf(vs)}.</p>
+    <div class="ph"><span>Alimento</span><span>Consigliato</span><span>Questa settimana</span></div>
+    ${PROT.map(p=>{
+      const n=typeCount(p.types),st=n<p.min?'low':n>p.max?'high':'ok';
+      return `<div class="pr"><span><b>${p.n}</b></span><span>${p.min===p.max?p.max:p.min+'–'+p.max} volte</span><span class="pv ${st}">${n}</span></div>`;
+    }).join('')}
+    <p class="note">Grigio: sotto il minimo · verde: nel range · arancione: sopra. Il conteggio usa i tipi Legumi, Pesce, Carne bianca/rossa, Uova e Formaggi.</p>
+    <button class="sec wide" data-act="protlimits" style="margin:10px 0 0"><i class="fa-solid fa-gauge-high"></i> Crea limiti con questi massimi</button></div>`;
+  h+=`<div class="card"><h3 style="margin-bottom:4px">Note del pediatra</h3>
+    <p class="note" style="margin:0">Scrivi qui le indicazioni del medico: si salvano da sole su questo dispositivo.</p>
+    <textarea id="pednote" class="ta" rows="6" maxlength="5000" placeholder="Es. visita del... indicazioni, integratori, alimenti da introdurre o evitare">${esc(S.pedNote||'')}</textarea>
+    <div class="frow"><span class="note" id="pedst" style="margin:0">Salvato</span><button class="link" data-act="regopen">Registro reazioni</button></div></div>`;
+  h+=`<p class="note" style="margin:0 6px 12px">Indicazioni generali ispirate alle raccomandazioni di SIP e OMS: non sostituiscono il parere del pediatra, che conosce la storia di Luna.</p>`;
+  return h;
+}
+
+const LIKE_UI=[{k:'top',e:'⭐',t:'Molto gradito'},{k:'ok',e:'🙂',t:'Mangiato'},{k:'no',e:'❌',t:'Rifiutato'}];
+function mealFoot(k,M){
+  const r=M.react;
+  return `<div class="likes" role="group" aria-label="Gradimento del pasto">${LIKE_UI.map(l=>`<button class="lk ${M.like===l.k?'on '+l.k:''}" data-act="like" data-m="${k}" data-v="${l.k}" aria-pressed="${M.like===l.k}"><span>${l.e}</span>${l.t}</button>`).join('')}</div>`+
+  (r?`<button class="reactrow" data-act="react" data-m="${k}"><i class="fa-solid fa-triangle-exclamation"></i><span><b>${r.types.map(t=>REACTS[t]).join(', ')}</b>${r.note?' · '+esc(r.note):''}</span></button>`
+    :`<button class="reactadd" data-act="react" data-m="${k}"><i class="fa-solid fa-notes-medical"></i> Segnala una reazione</button>`);
+}
+function openReact(m){
+  const r=getMeal(day,m).react,sel=new Set(r?r.types:[]),mn=MEALS.find(x=>x.k===m).n;
+  const f=openDlg(`<form><h3>Reazione dopo il pasto</h3>
+    <div class="lbl">${mn} di ${DAYS[day].toLowerCase()}: cosa hai notato?</div>
+    <div class="tags">${Object.keys(REACTS).map(k=>`<label class="tag" style="--c:#F2A29E;--t:#3B3659"><input type="checkbox" name="r" value="${k}" ${sel.has(k)?'checked':''}><span>${REACTS[k]}</span></label>`).join('')}</div>
+    <label class="f">Note (quando è comparsa, cosa aveva mangiato)<textarea name="t" rows="3" maxlength="300">${esc(r?r.note:'')}</textarea></label>
+    <div class="row">${r?'<button type="button" class="danger" data-del>Rimuovi</button>':''}<button type="button" class="ghost" data-close>Annulla</button><button class="pri">Salva</button></div></form>`,fd=>{
+    const types=fd.getAll('r'),note=fd.get('t').trim();
+    if(!types.length){toast('Scegli almeno una reazione');return false}
+    mealRef(day,m).react={types,note};save();render();toast('Reazione registrata');
+  });
+  const d=f.querySelector('[data-del]');
+  if(d)d.onclick=()=>{mealRef(day,m).react=null;save();render();dlg.close()};
+}
+function regEntries(){
+  const out=[];
+  Object.keys(S.weeks).forEach(wk=>Object.keys(S.weeks[wk].meals).forEach(mk=>{
+    const M=S.weeks[wk].meals[mk];
+    if(M.like!=='no'&&!M.react)return;
+    const [di,mn]=mk.split('-'),d=addDays(parse(wk),+di);
+    out.push({date:d,iso:iso(d),di:+di,mn,M});
+  }));
+  const ord=MEALS.map(x=>x.k);
+  return out.sort((a,b)=>b.iso.localeCompare(a.iso)||ord.indexOf(b.mn)-ord.indexOf(a.mn));
+}
+function regCard(){
+  const e=regEntries(),r=e.filter(x=>x.M.react).length,n=e.filter(x=>x.M.like==='no').length;
+  return `<div class="card"><h3 style="margin-bottom:4px">Registro reazioni</h3>
+    <p class="note" style="margin:0 0 10px">${r} ${r===1?'reazione':'reazioni'} · ${n} ${n===1?'pasto rifiutato':'pasti rifiutati'}</p>
+    <button class="sec wide" data-act="regopen" style="margin:0"><i class="fa-solid fa-notes-medical"></i> Apri registro</button></div>`;
+}
+function openRegistry(){
+  const e=regEntries();
+  const body=e.length?e.map(x=>{
+    const M=x.M,mm=MEALS.find(z=>z.k===x.mn);
+    const dishes=M.items.map(i=>esc(i.name)).join(', ')||'nessun piatto indicato';
+    return `<div class="reg"><div class="regh"><b>${DAYS[x.di].slice(0,3)} ${x.date.getDate()} ${x.date.toLocaleDateString('it-IT',{month:'short'})} ${x.date.getFullYear()}</b><span>${mm?mm.n:''}</span><button type="button" class="link" data-go="${x.iso}" data-di="${x.di}">Vai</button></div>
+      <div class="regd">${dishes}</div>
+      <div class="cats" style="margin-top:6px">${M.like==='no'?'<span class="chip over">❌ Rifiutato</span>':''}${M.react?M.react.types.map(t=>`<span class="chip over"><i class="fa-solid fa-triangle-exclamation"></i> ${REACTS[t]}</span>`).join(''):''}</div>
+      ${M.react&&M.react.note?`<p class="note" style="margin-top:6px">“${esc(M.react.note)}”</p>`:''}</div>`;
+  }).join(''):'<div class="empty"><i class="fa-solid fa-notes-medical"></i>Nessuna reazione o rifiuto registrato.</div>';
+  const f=openDlg(`<form><h3>Registro reazioni</h3><p class="hint" style="margin-top:-6px">Dal più recente: utile da mostrare al pediatra.</p>${body}<div class="row"><button type="button" class="ghost" data-close>Chiudi</button></div></form>`,()=>{});
+  f.addEventListener('click',ev=>{
+    const g=ev.target.closest('[data-go]');if(!g)return;
+    dlg.close();vs=iso(monday(parse(g.dataset.go)));day=+g.dataset.di;tab='menu';render();window.scrollTo(0,0);
+  });
+}
+function buildPrint(){
+  const w=parse(vs);
+  const rows=DAYS.map((d,i)=>`<tr><th>${d}<small>${fmt(addDays(w,i))}</small></th>${MEALS.map(m=>`<td>${getMeal(i,m.k).items.map(x=>`<div>${esc(x.name)}</div>`).join('')}</td>`).join('')}</tr>`).join('');
+  $('#printArea').innerHTML=`<h1>Menu Luniss · ${rangeOf(vs)} ${w.getFullYear()}</h1><table><thead><tr><th></th>${MEALS.map(m=>`<th>${m.n}</th>`).join('')}</tr></thead><tbody>${rows}</tbody></table>`;
+}
+
 /* ---------- render ---------- */
-const views={menu:viewMenu,types:viewTypes,limits:viewLimits,stats:viewStats,more:viewMore};
+const views={menu:viewMenu,types:viewTypes,limits:viewLimits,stats:viewStats,tips:viewTips,more:viewMore};
 function relLabel(){
   const d=Math.round((parse(vs)-monday(new Date()))/(7*864e5));
   if(d===0)return 'Settimana corrente';
@@ -467,6 +711,7 @@ function render(){
   charts.forEach(c=>c.destroy());charts=[];
   $('#range').textContent=rangeOf(vs)+' '+parse(vs).getFullYear();
   $('#rel').textContent=relLabel();
+  const al=ageLabel();$('#age').textContent=al?'• '+al:'';
   $('#pick').value=vs;
   $('#app').innerHTML=views[tab]();
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===tab));
@@ -577,8 +822,8 @@ function openLimit(id){
 
 /* ---------- backup ---------- */
 async function exportData(){
-  const name='menu-luniss-'+iso(new Date())+'.json';
-  const blob=new Blob([JSON.stringify({app:'menu-luniss',version:4,exportedAt:new Date().toISOString(),...S},null,2)],{type:'application/json'});
+  const name='menu_luniss_backup.json';
+  const blob=new Blob([JSON.stringify({app:'menu-luniss',version:5,exportedAt:new Date().toISOString(),...S},null,2)],{type:'application/json'});
   const ios=/iPhone|iPad/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   try{
     const file=new File([blob],name,{type:'application/json'});
@@ -593,11 +838,19 @@ $('#file').addEventListener('change',e=>{
   const f=e.target.files[0];e.target.value='';if(!f)return;
   const r=new FileReader();
   r.onload=()=>{
-    try{
-      const data=normalize(JSON.parse(r.result));
-      if(!confirm('Sostituire tutti i dati attuali con quelli del file?'))return;
-      S=data;save();render();toast('Dati ripristinati');
-    }catch(err){toast('File non valido: scegli un JSON di Menu Luniss')}
+    let data;
+    try{data=normalize(JSON.parse(r.result))}
+    catch(err){toast('File non valido: scegli un backup JSON di Menu Luniss');return}
+    if(!confirm("Sostituire tutti i dati attuali con quelli del file? L'operazione non si può annullare."))return;
+    const prev=localStorage.getItem(KEY),str=JSON.stringify(data);
+    try{localStorage.setItem(KEY,str);if(localStorage.getItem(KEY)!==str)throw new Error('verifica')}
+    catch(err){
+      try{prev===null?localStorage.removeItem(KEY):localStorage.setItem(KEY,prev)}catch(e2){}
+      toast('Ripristino non riuscito: i dati attuali sono rimasti invariati');return;
+    }
+    locked=true;clearTimeout(pedT);
+    toast('Backup caricato. Ricarico la pagina…');
+    setTimeout(()=>location.reload(),1100);
   };
   r.onerror=()=>toast('Impossibile leggere il file');
   r.readAsText(f);
@@ -638,6 +891,23 @@ document.addEventListener('click',e=>{
   if(a==='dellim'){if(confirm('Eliminare questo limite?')){S.limits=S.limits.filter(l=>l.id!==id);save();render()}return}
   if(a==='clearweek'){if(confirm('Svuotare il menu di questa settimana?')){delete S.weeks[vs];save();render();toast('Settimana svuotata')}return}
   if(a==='delweek'){if(confirm('Eliminare questa settimana dall\'archivio?')){S.history=S.history.filter(w=>w.id!==id);save();render()}return}
+  if(a==='like'){
+    const R=mealRef(day,m),v=b.dataset.v;
+    R.like=R.like===v?null:v;
+    if(R.like&&R.items.length){const eat=R.like!=='no';R.items.forEach(x=>x.done=eat);R.done=eat}
+    save();render();return}
+  if(a==='react')return openReact(m);
+  if(a==='print'){buildPrint();window.print();return}
+  if(a==='tipband'){tipBand=b.dataset.b;render();return}
+  if(a==='regopen')return openRegistry();
+  if(a==='protlimits'){
+    if(!confirm('Creare (o aggiornare) un limite per Legumi, Pesce, Carne, Uova e Formaggi con i massimi consigliati?'))return;
+    PROT.forEach(p=>{
+      const types=p.types.filter(id=>cat(id));if(!types.length)return;
+      const nm=p.n+' (consigliato)',ex=S.limits.find(l=>l.name.toLowerCase()===nm.toLowerCase());
+      if(ex){ex.max=p.max;ex.types=types}else S.limits.push({id:uid(),name:nm,max:p.max,types,words:[]});
+    });
+    save();render();toast('Limiti consigliati impostati');return}
   if(a==='export')return exportData();
   if(a==='import')return $('#file').click();
 });
@@ -651,6 +921,17 @@ $('#pick').addEventListener('change',e=>{
 });
 $('#pick').addEventListener('click',e=>{try{e.target.showPicker()}catch(err){}});
 window.addEventListener('resize',()=>document.documentElement.style.setProperty('--hh',$('header').offsetHeight+'px'));
+document.addEventListener('input',e=>{
+  if(e.target.id!=='pednote')return;
+  S.pedNote=e.target.value;
+  const st=$('#pedst');if(st)st.textContent='Salvataggio…';
+  clearTimeout(pedT);
+  pedT=setTimeout(()=>{pedT=null;save();const x=$('#pedst');if(x)x.textContent='Salvato'},350);
+});
+function flushPed(){if(pedT){clearTimeout(pedT);pedT=null;save()}}
+window.addEventListener('pagehide',flushPed);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flushPed()});
+window.addEventListener('beforeprint',buildPrint);
 render();
 </script>
 </body>
